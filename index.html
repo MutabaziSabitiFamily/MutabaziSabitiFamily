@@ -215,10 +215,27 @@ footer {
 </section>
 
 <section id="tree">
+
 <div class="card">
-<h2>🌳 Our Family Tree</h2>
-<p>The interactive family tree will be connected to our database here.</p>
+    <h2>🌳 Our Family Tree</h2>
+    <p>Explore our family relationships.</p>
+
+    <input
+        type="search"
+        id="treeSearch"
+        placeholder="🔎 Search family tree..."
+        oninput="filterFamilyTree()"
+    >
 </div>
+
+<div id="familyTreeContainer">
+
+    <div class="card">
+        <p>Loading family tree...</p>
+    </div>
+
+</div>
+
 </section>
 
 <section id="members">
@@ -296,7 +313,9 @@ function showPage(pageId) {
     });
 
     document.getElementById(pageId).classList.add("active");
-
+if (pageId === "tree") {
+    loadFamilyTree();
+    }
     window.scrollTo({
         top: 0,
         behavior: "smooth"
@@ -664,6 +683,173 @@ async function loadFamilyMembers() {
 
         </div>
     `;
+    }
+    async function loadFamilyTree() {
+
+    const container = document.getElementById("familyTreeContainer");
+
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="card">
+            <p>Loading family tree...</p>
+        </div>
+    `;
+
+    const { data, error } = await supabaseClient
+        .from("family_members")
+        .select(`
+            id,
+            first_name,
+            middle_names,
+            surname,
+            display_name,
+            preferred_name,
+            profile_photo_url,
+            father_id,
+            mother_id,
+            spouse_id,
+            role,
+            status
+        `)
+        .order("first_name", { ascending: true });
+
+    if (error) {
+        container.innerHTML = `
+            <div class="card">
+                <h3>Unable to load family tree</h3>
+                <p>${error.message}</p>
+            </div>
+        `;
+
+        console.error(error);
+        return;
+    }
+
+    window.familyTreeMembers = data || [];
+
+    displayFamilyTree(window.familyTreeMembers);
+    }
+    function filterFamilyTree() {
+
+    const search =
+        document.getElementById("treeSearch")
+            .value
+            .toLowerCase()
+            .trim();
+
+    const filtered =
+        (window.familyTreeMembers || []).filter(member => {
+
+            const name =
+                member.display_name ||
+                [
+                    member.first_name,
+                    member.middle_names,
+                    member.surname
+                ]
+                .filter(Boolean)
+                .join(" ");
+
+            return name.toLowerCase().includes(search);
+        });
+
+    displayFamilyTree(filtered);
+}
+    function displayFamilyTree(members) {
+
+    const container =
+        document.getElementById("familyTreeContainer");
+
+    if (!container) return;
+
+    if (!members || members.length === 0) {
+        container.innerHTML = `
+            <div class="card">
+                <p>No family members found.</p>
+            </div>
+        `;
+        return;
+    }
+
+    const memberMap = {};
+
+    members.forEach(member => {
+        memberMap[member.id] = member;
+    });
+
+    let html = "";
+
+    members.forEach(member => {
+
+        const name =
+            member.display_name ||
+            [
+                member.first_name,
+                member.middle_names,
+                member.surname
+            ]
+            .filter(Boolean)
+            .join(" ");
+
+        const father =
+            member.father_id &&
+            memberMap[member.father_id]
+                ? (
+                    memberMap[member.father_id].display_name ||
+                    memberMap[member.father_id].first_name
+                  )
+                : "";
+
+        const mother =
+            member.mother_id &&
+            memberMap[member.mother_id]
+                ? (
+                    memberMap[member.mother_id].display_name ||
+                    memberMap[member.mother_id].first_name
+                  )
+                : "";
+
+        const spouse =
+            member.spouse_id &&
+            memberMap[member.spouse_id]
+                ? (
+                    memberMap[member.spouse_id].display_name ||
+                    memberMap[member.spouse_id].first_name
+                  )
+                : "";
+
+        html += `
+            <div class="card tree-member">
+
+                <h3>👤 ${name || "Family Member"}</h3>
+
+                ${member.role
+                    ? `<p><strong>Role:</strong> ${member.role}</p>`
+                    : ""}
+
+                ${father
+                    ? `<p>👨 Father: ${father}</p>`
+                    : ""}
+
+                ${mother
+                    ? `<p>👩 Mother: ${mother}</p>`
+                    : ""}
+
+                ${spouse
+                    ? `<p>❤️ Spouse: ${spouse}</p>`
+                    : ""}
+
+                <button class="primary"
+                    onclick="viewMemberProfile('${member.id}')">
+                    View Profile
+                </button>
+
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
     }
 loadFamilyMembers();
 </script>
