@@ -464,6 +464,9 @@ async function loadFamilyMembers() {
                 ${member.biography
                     ? `<p>${member.biography}</p>`
                     : ""}
+                    <button class="primary" onclick="viewMemberProfile('${member.id}')">
+    👤 View Full Profile
+</button>
             </div>
         `;
     });
@@ -493,6 +496,174 @@ async function loadFamilyMembers() {
     });
 
     displayMembers(filtered);
+    }
+    async function viewMemberProfile(memberId) {
+
+    const { data: member, error } = await supabaseClient
+        .from("family_members")
+        .select(`
+            id,
+            member_number,
+            first_name,
+            middle_names,
+            surname,
+            display_name,
+            preferred_name,
+            date_of_birth,
+            place_of_birth,
+            gender,
+            profile_photo_url,
+            biography,
+            occupation,
+            education,
+            phone,
+            email,
+            village,
+            parish,
+            sub_county,
+            district,
+            country,
+            status,
+            date_of_death,
+            burial_place,
+            family_description,
+            role,
+            relationship_notes,
+            father_id,
+            mother_id,
+            spouse_id
+        `)
+        .eq("id", memberId)
+        .single();
+
+    if (error) {
+        alert("Unable to load this family profile.");
+        console.error(error);
+        return;
+    }
+
+    const name =
+        member.display_name ||
+        [
+            member.first_name,
+            member.middle_names,
+            member.surname
+        ].filter(Boolean).join(" ");
+
+    const photo = member.profile_photo_url
+        ? `<img src="${member.profile_photo_url}"
+                alt="${name}"
+                style="width:150px;height:150px;object-fit:cover;border-radius:50%;margin-bottom:15px;">`
+        : `<div style="font-size:100px;">👤</div>`;
+
+    const membersSection = document.getElementById("members");
+
+    membersSection.innerHTML = `
+        <div class="card">
+
+            <button onclick="loadFamilyMembers()">
+                ← Back to Family Members
+            </button>
+
+            <div style="text-align:center;margin-top:20px;">
+                ${photo}
+
+                <h2>${name}</h2>
+
+                ${member.preferred_name
+                    ? `<p><strong>Preferred name:</strong> ${member.preferred_name}</p>`
+                    : ""}
+
+                ${member.member_number
+                    ? `<p><strong>Member No.:</strong> ${member.member_number}</p>`
+                    : ""}
+
+                ${member.role
+                    ? `<p><strong>Family role:</strong> ${member.role}</p>`
+                    : ""}
+
+                ${member.status
+                    ? `<p><strong>Status:</strong> ${member.status}</p>`
+                    : ""}
+            </div>
+
+            <hr>
+
+            <h3>Personal Information</h3>
+
+            ${member.date_of_birth
+                ? `<p><strong>Date of birth:</strong> ${member.date_of_birth}</p>`
+                : ""}
+
+            ${member.place_of_birth
+                ? `<p><strong>Place of birth:</strong> ${member.place_of_birth}</p>`
+                : ""}
+
+            ${member.gender
+                ? `<p><strong>Gender:</strong> ${member.gender}</p>`
+                : ""}
+
+            ${member.occupation
+                ? `<p><strong>Occupation:</strong> ${member.occupation}</p>`
+                : ""}
+
+            ${member.education
+                ? `<p><strong>Education:</strong> ${member.education}</p>`
+                : ""}
+
+            <h3>Contact & Location</h3>
+
+            ${member.phone
+                ? `<p><strong>Phone:</strong> ${member.phone}</p>`
+                : ""}
+
+            ${member.email
+                ? `<p><strong>Email:</strong> ${member.email}</p>`
+                : ""}
+
+            ${member.village
+                ? `<p><strong>Village:</strong> ${member.village}</p>`
+                : ""}
+
+            ${member.parish
+                ? `<p><strong>Parish:</strong> ${member.parish}</p>`
+                : ""}
+
+            ${member.sub_county
+                ? `<p><strong>Sub-county:</strong> ${member.sub_county}</p>`
+                : ""}
+
+            ${member.district
+                ? `<p><strong>District:</strong> ${member.district}</p>`
+                : ""}
+
+            ${member.country
+                ? `<p><strong>Country:</strong> ${member.country}</p>`
+                : ""}
+
+            ${member.biography
+                ? `<h3>Biography</h3><p>${member.biography}</p>`
+                : ""}
+
+            ${member.family_description
+                ? `<h3>Family Information</h3><p>${member.family_description}</p>`
+                : ""}
+
+            ${member.relationship_notes
+                ? `<h3>Relationship Notes</h3><p>${member.relationship_notes}</p>`
+                : ""}
+
+            ${member.date_of_death
+                ? `<h3>Memorial Information</h3>
+                   <p><strong>Date of death:</strong> ${member.date_of_death}</p>`
+                : ""}
+
+            ${member.burial_place
+                ? `<p><strong>Burial place:</strong> ${member.burial_place}</p>`
+                : ""}
+
+        </div>
+    `;
     }
 loadFamilyMembers();
 </script>
