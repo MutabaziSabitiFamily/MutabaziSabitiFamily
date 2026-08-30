@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mutabazi Sabiti Family</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f7f5;
+    color: #1d2b23;
+}
+
+header {
+    background: #173f2b;
+    color: white;
+    text-align: center;
+    padding: 30px 15px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+header p {
+    margin: 8px 0 0;
+    font-style: italic;
+}
+
+nav {
+    display: flex;
+    overflow-x: auto;
+    background: white;
+    padding: 10px;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+nav button {
+    border: none;
+    background: #e8eee9;
+    padding: 11px 15px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+main {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+section {
+    display: none;
+}
+
+section.active {
+    display: block;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    margin-bottom: 15px;
+    border-radius: 16px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.grid .card {
+    text-align: center;
+}
+
+.icon {
+    font-size: 30px;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #65736b;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Mutabazi Sabiti Family</h1>
+    <p>Our roots, our strength, our legacy.</p>
+</header>
+
+<nav>
+    <button onclick="showPage('home')">🏠 Home</button>
+    <button onclick="showPage('tree')">🌳 Family Tree</button>
+    <button onclick="showPage('members')">👨‍👩‍👧 Members</button>
+    <button onclick="showPage('gallery')">📸 Gallery</button>
+    <button onclick="showPage('birthdays')">🎂 Birthdays</button>
+    <button onclick="showPage('announcements')">📢 News</button>
+    <button onclick="showPage('calendar')">📅 Calendar</button>
+    <button onclick="showPage('book')">📖 Family Book</button>
+</nav>
+
+<main>
+
+<section id="home" class="active">
+
+<div class="card">
+    <h2>Welcome to the Mutabazi Sabiti Family</h2>
+
+    <p>
+        Welcome to our family home — a place where our history,
+        relationships, memories, celebrations and legacy are preserved
+        for present and future generations.
+    </p>
+
+    <p><strong>“Our roots, our strength, our legacy.”</strong></p>
+</div>
+
+<div class="grid">
+
+<div class="card">
+    <div class="icon">🌳</div>
+    <strong>Family Tree</strong>
+</div>
+
+<div class="card">
+    <div class="icon">👨‍👩‍👧‍👦</div>
+    <strong>Family Members</strong>
+</div>
+
+<div class="card">
+    <div class="icon">📸</div>
+    <strong>Family Gallery</strong>
+</div>
+
+<div class="card">
+    <div class="icon">🎂</div>
+    <strong>Birthdays</strong>
+</div>
+
+<div class="card">
+    <div class="icon">📢</div>
+    <strong>Announcements</strong>
+</div>
+
+<div class="card">
+    <div class="icon">📖</div>
+    <strong>Family Book</strong>
+</div>
+
+</div>
+
+</section>
+
+<section id="tree">
+<div class="card">
+<h2>🌳 Our Family Tree</h2>
+<p>The interactive family tree will be connected to our database here.</p>
+</div>
+</section>
+
+<section id="members">
+<div class="card">
+<h2>👨‍👩‍👧‍👦 Family Members</h2>
+<p>Family member records will be loaded from our Supabase database.</p>
+</div>
+</section>
+
+<section id="gallery">
+<div class="card">
+<h2>📸 Family Gallery</h2>
+<p>Our family photographs will appear here.</p>
+</div>
+</section>
+
+<section id="birthdays">
+<div class="card">
+<h2>🎂 Birthdays</h2>
+<p>Family birthdays will be displayed here.</p>
+</div>
+</section>
+
+<section id="announcements">
+<div class="card">
+<h2>📢 Family Announcements</h2>
+<p>Important family announcements will appear here.</p>
+</div>
+</section>
+
+<section id="calendar">
+<div class="card">
+<h2>📅 Family Calendar</h2>
+<p>Family events and important dates will appear here.</p>
+</div>
+</section>
+
+<section id="book">
+<div class="card">
+<h2>📖 Our Family Book</h2>
+<p>
+The family book, including the preliminaries, family tree,
+and chapters, will appear here.
+</p>
+</div>
+</section>
+
+</main>
+
+<footer>
+    Mutabazi Sabiti Family<br>
+    Our roots, our strength, our legacy.
+</footer>
+
+<script>
+
+function showPage(pageId) {
+
+    const sections = document.querySelectorAll("section");
+
+    sections.forEach(function(section) {
+        section.classList.remove("active");
+    });
+
+    document.getElementById(pageId).classList.add("active");
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+</script>
+
+</body>
+</html>
