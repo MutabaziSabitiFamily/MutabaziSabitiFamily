@@ -245,6 +245,75 @@ function showPage(pageId) {
 }
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script>
+const SUPABASE_URL = "https://dkjibindcgqhnvftgrhg.supabase.co";
+
+/*
+  Paste your sb_publishable_... key between the quotes below.
+  NEVER use your sb_secret_... key here.
+*/
+const SUPABASE_KEY = "sb_publishable_wCEv1m6o9qIS-OFChZk3wg_LPyZIMuR";
+
+const supabaseClient = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+async function loadFamilyMembers() {
+
+    const membersSection = document.getElementById("members");
+
+    membersSection.innerHTML = `
+        <div class="card">
+            <h2>👨‍👩‍👧‍👦 Family Members</h2>
+            <p>Loading family members...</p>
+        </div>
+    `;
+
+    const { data, error } = await supabaseClient
+        .from("family_members")
+        .select("display_name, first_name, middle_names, surname, role")
+        .order("first_name");
+
+    if (error) {
+        membersSection.innerHTML = `
+            <div class="card">
+                <h2>👨‍👩‍👧‍👦 Family Members</h2>
+                <p>Unable to load family members.</p>
+            </div>
+        `;
+        console.error(error);
+        return;
+    }
+
+    let html = `
+        <div class="card">
+            <h2>👨‍👩‍👧‍👦 Family Members</h2>
+            <p>Our family directory</p>
+        </div>
+    `;
+
+    data.forEach(member => {
+
+        const name =
+            member.display_name ||
+            [member.first_name, member.middle_names, member.surname]
+                .filter(Boolean)
+                .join(" ");
+
+        html += `
+            <div class="card">
+                <h3>${name || "Family Member"}</h3>
+            </div>
+        `;
+    });
+
+    membersSection.innerHTML = html;
+}
+
+loadFamilyMembers();
+</script>
 </body>
 </html>
