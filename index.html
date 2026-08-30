@@ -208,6 +208,44 @@ footer {
     gap: 10px;
     width: 100%;
 }
+    .tree-root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.tree-family-branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.tree-couple {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tree-spouse-line {
+    font-size: 22px;
+    padding: 5px;
+}
+
+.tree-generation {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.tree-family-branch > .tree-generation {
+    margin-top: 5px;
+    }
 </style>
 </head>
 
@@ -842,9 +880,9 @@ async function loadFamilyMembers() {
     displayFamilyTree(filtered);
 }
     function displayFamilyTree(members) {
+function displayFamilyTree(members) {
 
-    const container =
-        document.getElementById("familyTreeContainer");
+    const container = document.getElementById("familyTreeContainer");
 
     if (!container) return;
 
@@ -863,79 +901,196 @@ async function loadFamilyMembers() {
         memberMap[member.id] = member;
     });
 
-    let html = "";
-
-    members.forEach(member => {
-
-        const name =
-            member.display_name ||
+    function memberName(member) {
+        return member.display_name ||
             [
                 member.first_name,
                 member.middle_names,
                 member.surname
-            ]
-            .filter(Boolean)
-            .join(" ");
+            ].filter(Boolean).join(" ");
+    }
 
-        const father =
-            member.father_id &&
-            memberMap[member.father_id]
-                ? (
-                    memberMap[member.father_id].display_name ||
-                    memberMap[member.father_id].first_name
-                  )
-                : "";
+    function personCard(member) {
 
-        const mother =
-            member.mother_id &&
-            memberMap[member.mother_id]
-                ? (
-                    memberMap[member.mother_id].display_name ||
-                    memberMap[member.mother_id].first_name
-                  )
-                : "";
+        const name = memberName(member);
 
-        const spouse =
+        return `
+            <button
+                class="tree-person-button"
+                onclick="viewMemberProfile('${member.id}')">
+
+                ${
+                    member.profile_photo_url
+                    ? `<img src="${member.profile_photo_url}"
+                            class="tree-photo"
+                            alt="${name}">`
+                    : `<div class="tree-avatar">👤</div>`
+                }
+
+                <strong>${name}</strong>
+
+                ${
+                    member.role
+                    ? `<small>${member.role}</small>`
+                    : ""
+                }
+
+            </button>
+        `;
+    }
+
+    function coupleCard(member) {
+
+        let html = `
+            <div class="tree-couple">
+                ${personCard(member)}
+        `;
+
+        if (
             member.spouse_id &&
             memberMap[member.spouse_id]
-                ? (
-                    memberMap[member.spouse_id].display_name ||
-                    memberMap[member.spouse_id].first_name
-                  )
-                : "";
+        ) {
+
+            const spouse = memberMap[member.spouse_id];
+
+            html += `
+                <div class="tree-spouse-line">❤️</div>
+                ${personCard(spouse)}
+            `;
+        }
 
         html += `
-            <div class="card tree-member">
+            </div>
+        `;
 
-                <h3>👤 ${name || "Family Member"}</h3>
+        return html;
+    }
 
-                ${member.role
-                    ? `<p><strong>Role:</strong> ${member.role}</p>`
-                    : ""}
+    const children = {};
 
-                ${father
-                    ? `<p>👨 Father: ${father}</p>`
-                    : ""}
+    members.forEach(member => {
 
-                ${mother
-                    ? `<p>👩 Mother: ${mother}</p>`
-                    : ""}
+        if (member.father_id) {
 
-                ${spouse
-                    ? `<p>❤️ Spouse: ${spouse}</p>`
-                    : ""}
+            if (!children[member.father_id]) {
+                children[member.father_id] = [];
+            }
 
-                <button class="primary"
-                    onclick="viewMemberProfile('${member.id}')">
-                    View Profile
-                </button>
+            children[member.father_id].push(member);
+        }
+
+        if (member.mother_id) {
+
+            if (!children[member.mother_id]) {
+                children[member.mother_id] = [];
+            }
+
+            children[member.mother_id].push(member);
+        }
+    });
+
+    const roots = members.filter(member =>
+        !member.father_id &&
+        !member.mother_id &&
+        (
+            !member.spouse_id ||
+            !memberMap[member.spouse_id] ||
+            !memberMap[member.spouse_id].father_id &&
+            !memberMap[member.spouse_id].mother_id
+        )
+    );
+
+    const displayedRoots = [];
+    const used = new Set();
+
+    roots.forEach(member => {
+
+        if (used.has(member.id)) return;
+
+        displayedRoots.push(member);
+
+        used.add(member.id);
+
+        if (member.spouse_id) {
+            used.add(member.spouse_id);
+        }
+    });
+
+    function buildGeneration(parent) {
+
+        const childList = children[parent.id] || [];
+
+        if (childList.length === 0) {
+            return "";
+        }
+
+        let html = `
+            <div class="tree-line">↓</div>
+
+            <div class="tree-generation">
+        `;
+
+        childList.forEach(child => {
+
+            if (!used.has(child.id)) {
+
+                used.add(child.id);
+
+                if (child.spouse_id) {
+                    used.add(child.spouse_id);
+                }
+
+                html += `
+                    <div class="tree-family-branch">
+
+                        ${coupleCard(child)}
+
+                        ${buildGeneration(child)}
+
+                    </div>
+                `;
+            }
+        });
+
+        html += `
+            </div>
+        `;
+
+        return html;
+    }
+
+    let html = `
+        <div class="family-tree-visual">
+
+            <h3>🌳 Mutabazi Sabiti Family Tree</h3>
+
+            <p class="tree-help">
+                Tap a person to view their full profile.
+            </p>
+
+            <div class="tree-root">
+    `;
+
+    displayedRoots.forEach(root => {
+
+        html += `
+            <div class="tree-family-branch">
+
+                ${coupleCard(root)}
+
+                ${buildGeneration(root)}
 
             </div>
         `;
     });
 
+    html += `
+            </div>
+        </div>
+    `;
+
     container.innerHTML = html;
-    }
+}
 loadFamilyMembers();
 </script>
 </body>
