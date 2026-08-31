@@ -550,7 +550,7 @@ async function loadFamilyMembers() {
     `;
 
     const { data, error } = await supabaseClient
-        .from("famil_gallery")
+        .from("family_gallery")
         .select("id, title, description, photo_url, event_date, created_at")
         .order("created_at", { ascending: false });
 
