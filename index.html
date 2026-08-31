@@ -475,8 +475,7 @@ async function loginUser() {
             email: email,
             password: password
         });
-console.log("GALLERY DATA:", data);
-    alert("Gallery records found: " + (data ? data.length : "null"));
+
     if (error) {
         message.textContent = error.message;
         return;
