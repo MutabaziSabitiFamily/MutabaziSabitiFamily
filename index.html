@@ -687,8 +687,71 @@ async function loadFamilyMembers() {
     });
 
     membersList.innerHTML = html;
+}
+
+async function loadBirthdays() {
+
+    const birthdays = document.getElementById("birthdays");
+
+    if (!birthdays) return;
+
+    birthdays.innerHTML = `
+        <div class="card">
+            <h2>🎂 Family Birthdays</h2>
+            <p>Loading birthdays...</p>
+        </div>
+    `;
+
+    const { data, error } = await supabaseClient
+        .from("family_birthdays")
+        .select("id, member_name, birth_date, description")
+        .order("birth_date", { ascending: true });
+
+    if (error) {
+        birthdays.innerHTML = `
+            <div class="card">
+                <h3>Birthday database error</h3>
+                <p>${error.message}</p>
+            </div>
+        `;
+        console.error("Birthday error:", error);
+        return;
     }
-    function filterMembers() {
+
+    if (!data || data.length === 0) {
+        birthdays.innerHTML = `
+            <div class="card">
+                <h2>🎂 Family Birthdays</h2>
+                <p>No birthdays have been added yet.</p>
+            </div>
+        `;
+        return;
+    }
+
+    let html = `
+        <div class="card">
+            <h2>🎂 Family Birthdays</h2>
+            <p>Celebrating our family members</p>
+        </div>
+    `;
+
+    data.forEach(birthday => {
+
+        html += `
+            <div class="card">
+                <h3>🎉 ${birthday.member_name}</h3>
+                <p><strong>Birthday:</strong> ${birthday.birth_date}</p>
+                ${birthday.description
+                    ? `<p>${birthday.description}</p>`
+                    : ""}
+            </div>
+        `;
+    });
+
+    birthdays.innerHTML = html;
+}
+
+function filterMembers() {
 
     const search =
         document.getElementById("memberSearch").value
@@ -1165,6 +1228,7 @@ function displayFamilyTree(members) {
 }
 loadFamilyMembers();
 loadFamilyGallery();
+loadBirthdays();
 </script>
 </body>
     
