@@ -610,7 +610,8 @@ async function loadFamilyMembers() {
     });
 
     gallery.innerHTML = html;
-}                    ${photo.title ? `<h3>${photo.title}</h3>` : ""}
+}         
+    ${photo.title ? `<h3>${photo.title}</h3>` : ""}
 
                     ${photo.description ? `<p>${photo.description}</p>` : ""}
 
@@ -634,7 +635,7 @@ async function loadFamilyMembers() {
             </div>
         `;
     }
-}
+
     function displayMembers(members) {
 
     const membersList = document.getElementById("membersList");
