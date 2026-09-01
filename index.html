@@ -483,46 +483,6 @@ async function loginUser() {
 
     document.getElementById("loginScreen").style.display = "none";
     
-async function handleLogin(e) {
-  e.preventDefault()
-  
-  // STEP 1: Button works
-  alert('Step 1: Button works')
-  
-  // STEP 2: Check if email/password states are set
-  console.log('Email state:', email)
-  console.log('Password state:', password)
-  alert(`Step 2: Email = "${email}", Password = "${password}"`)
-  
-  // STEP 3: Check if Supabase is initialized
-  if (!supabase) {
-    alert('Step 3 FAILED: Supabase is not initialized')
-    return
-  }
-  alert('Step 3: Supabase is initialized')
-  
-  // STEP 4: Try login
-  try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    })
-    
-    // STEP 5: Show result
-    if (error) {
-      console.error('Login error:', error)
-      alert(`Step 5 ERROR: ${error.message}`)
-      return
-    }
-    
-    alert(`Step 5 SUCCESS: Logged in as ${data.user.email}`)
-    console.log('Full user data:', data)
-    
-  } catch (exception) {
-    console.error('Exception:', exception)
-    alert(`Step 5 EXCEPTION: ${exception.message}`)
-  }
-}
     loadFamilyMembers();
     }
 async function loadFamilyMembers() {
