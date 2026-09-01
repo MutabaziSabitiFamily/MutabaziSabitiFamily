@@ -549,19 +549,22 @@ async function loadFamilyMembers() {
         </div>
     `;
 
-    const { data, error } = await supabaseClient
+    const { data, error, count } = await supabaseClient
         .from("family_gallery")
-        .select("id, title, description, photo_url, event_date, created_at")
+        .select("id, title, description, photo_url, event_date, created_at", {
+            count: "exact"
+        })
         .order("created_at", { ascending: false });
 
     if (error) {
         gallery.innerHTML = `
             <div class="card">
-                <h3>Unable to load family gallery</h3>
+                <h3>Gallery database error</h3>
                 <p>${error.message}</p>
+                <p><strong>Code:</strong> ${error.code || "none"}</p>
             </div>
         `;
-        console.error(error);
+        console.error("Gallery error:", error);
         return;
     }
 
@@ -569,7 +572,8 @@ async function loadFamilyMembers() {
         gallery.innerHTML = `
             <div class="card">
                 <h2>📸 Family Gallery</h2>
-                <p>Data received: ${JSON.stringify(data)}</p>
+                <p><strong>Records returned:</strong> ${count}</p>
+                <p><strong>Data:</strong> ${JSON.stringify(data)}</p>
             </div>
         `;
         return;
@@ -606,7 +610,7 @@ async function loadFamilyMembers() {
     });
 
     gallery.innerHTML = html;
-    }
+}
     function displayMembers(members) {
 
     const membersList = document.getElementById("membersList");
