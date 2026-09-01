@@ -766,8 +766,8 @@ async function loadAnnouncements() {
     `;
 
     const { data, error } = await supabaseClient
-        .from("family_announcements")
-        .select("id, title, content, announcement_date")
+        .from("announcements")
+        .select("id, title, content")
         .order("announcement_date", { ascending: false });
 
     if (error) {
