@@ -482,7 +482,33 @@ async function loginUser() {
     }
 
     document.getElementById("loginScreen").style.display = "none";
-
+async function handleLogin(e) {
+  e.preventDefault()
+  
+  // Step 1: Check if button is working
+  console.log('Button clicked!')
+  alert('Step 1: Button works!')
+  
+  // Step 2: Check email/password values
+  console.log('Email:', email)
+  console.log('Password:', password)
+  alert(`Step 2: Email = ${email}, Password = ${password}`)
+  
+  // Step 3: Try authentication
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  })
+  
+  // Step 4: Show result
+  if (error) {
+    console.error('Login error:', error)
+    alert(`Step 4: ERROR - ${error.message}`)
+  } else {
+    console.log('Success:', data)
+    alert('Step 4: SUCCESS! Check console for user data')
+  }
+}
     loadFamilyMembers();
     }
 async function loadFamilyMembers() {
