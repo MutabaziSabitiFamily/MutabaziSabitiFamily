@@ -767,7 +767,7 @@ async function loadAnnouncements() {
 
     const { data, error } = await supabaseClient
         .from("family_announcements")
-        .select("id, title, description, announcement_date")
+        .select("id, title, content, announcement_date")
         .order("announcement_date", { ascending: false });
 
     if (error) {
@@ -806,9 +806,9 @@ async function loadAnnouncements() {
                 ${announcement.announcement_date
                     ? `<p><strong>Date:</strong> ${announcement.announcement_date}</p>`
                     : ""}
-                ${announcement.description
-                    ? `<p>${announcement.description}</p>`
-                    : ""}
+                ${announcement.content
+    ? `<p>${announcement.content}</p>`
+    : ""}
             </div>
         `;
     });
