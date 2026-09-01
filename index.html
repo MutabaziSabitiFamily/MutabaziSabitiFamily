@@ -612,31 +612,7 @@ async function loadFamilyMembers() {
 
     gallery.innerHTML = html;
 }         
-    ${photo.title ? `<h3>${photo.title}</h3>` : ""}
-
-                    ${photo.description ? `<p>${photo.description}</p>` : ""}
-
-                    ${photo.event_date
-                        ? `<p><strong>Date:</strong> ${photo.event_date}</p>`
-                        : ""}
-                </div>
-            `;
-        });
-
-        gallery.innerHTML = html;
-
-    } catch (error) {
-
-        console.error("Family Gallery unexpected error:", error);
-
-        gallery.innerHTML = `
-            <div class="card">
-                <h2>📸 Family Gallery</h2>
-                <p><strong>Unexpected error:</strong> ${error.message}</p>
-            </div>
-        `;
-    }
-
+    
     function displayMembers(members) {
 
     const membersList = document.getElementById("membersList");
