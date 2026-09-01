@@ -537,79 +537,104 @@ async function loadFamilyMembers() {
     displayMembers(window.familyMembers);
 }
     async function loadFamilyGallery() {
+async function loadFamilyGallery() {
 
     const gallery = document.getElementById("gallery");
 
-    if (!gallery) return;
+    if (!gallery) {
+        console.error("Gallery element #gallery was not found.");
+        return;
+    }
 
     gallery.innerHTML = `
         <div class="card">
             <h2>📸 Family Gallery</h2>
-            <p>Loading family photos...</p>
+            <p>Connecting to family gallery...</p>
         </div>
     `;
 
-    const { data, error, count } = await supabaseClient
-        .from("family_gallery")
-        .select("id, title, description, photo_url, event_date, created_at", {
-            count: "exact"
-        })
-        .order("created_at", { ascending: false });
+    try {
 
-    if (error) {
-        gallery.innerHTML = `
+        if (!supabaseClient) {
+            throw new Error("supabaseClient is not available.");
+        }
+
+        const { data, error } = await supabaseClient
+            .from("family_gallery")
+            .select("id, title, description, photo_url, event_date, created_at")
+            .order("created_at", { ascending: false });
+
+        console.log("Family Gallery data:", data);
+        console.log("Family Gallery error:", error);
+
+        if (error) {
+            gallery.innerHTML = `
+                <div class="card">
+                    <h2>📸 Family Gallery</h2>
+                    <p><strong>Database error:</strong> ${error.message}</p>
+                    <p><strong>Code:</strong> ${error.code || "none"}</p>
+                </div>
+            `;
+            return;
+        }
+
+        if (!data || data.length === 0) {
+            gallery.innerHTML = `
+                <div class="card">
+                    <h2>📸 Family Gallery</h2>
+                    <p>No family photos have been added yet.</p>
+                </div>
+            `;
+            return;
+        }
+
+        let html = `
             <div class="card">
-                <h3>Gallery database error</h3>
-                <p>${error.message}</p>
-                <p><strong>Code:</strong> ${error.code || "none"}</p>
+                <h2>📸 Family Gallery</h2>
+                <p>Our family memories</p>
             </div>
         `;
-        console.error("Gallery error:", error);
-        return;
-    }
 
-    if (!data || data.length === 0) {
+        data.forEach(photo => {
+
+            html += `
+                <div class="card">
+                    <img
+                        src="${photo.photo_url}"
+                        alt="${photo.title || "Family photo"}"
+                        style="
+                            width:100%;
+                            max-width:500px;
+                            border-radius:12px;
+                            display:block;
+                            margin:0 auto 15px;
+                        "
+                    >
+
+                    ${photo.title ? `<h3>${photo.title}</h3>` : ""}
+
+                    ${photo.description ? `<p>${photo.description}</p>` : ""}
+
+                    ${photo.event_date
+                        ? `<p><strong>Date:</strong> ${photo.event_date}</p>`
+                        : ""}
+                </div>
+            `;
+        });
+
+        gallery.innerHTML = html;
+
+    } catch (error) {
+
+        console.error("Family Gallery unexpected error:", error);
+
         gallery.innerHTML = `
             <div class="card">
                 <h2>📸 Family Gallery</h2>
-                <p><strong>Records returned:</strong> ${count}</p>
-                <p><strong>Data:</strong> ${JSON.stringify(data)}</p>
+                <p><strong>Unexpected error:</strong> ${error.message}</p>
             </div>
         `;
-        return;
     }
-
-    let html = `
-        <div class="card">
-            <h2>📸 Family Gallery</h2>
-            <p>Our family memories</p>
-        </div>
-    `;
-
-    data.forEach(photo => {
-
-        html += `
-            <div class="card">
-                <img src="${photo.photo_url}"
-                     alt="${photo.title || "Family photo"}"
-                     style="width:100%;max-width:500px;border-radius:12px;display:block;margin:auto;">
-
-                ${photo.title
-                    ? `<h3>${photo.title}</h3>`
-                    : ""}
-
-                ${photo.description
-                    ? `<p>${photo.description}</p>`
-                    : ""}
-
-                ${photo.event_date
-                    ? `<p><strong>Date:</strong> ${photo.event_date}</p>`
-                    : ""}
-            </div>
-        `;
-    });
-
-    gallery.innerHTML = html;
 }
     function displayMembers(members) {
 
