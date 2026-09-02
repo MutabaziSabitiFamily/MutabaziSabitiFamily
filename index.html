@@ -1296,9 +1296,9 @@ function filterMembers() {
     membersSection.innerHTML = `
         <div class="card">
 
-            <button onclick="loadFamilyMembers()">
-                ← Back to Family Members
-            </button>
+            <button onclick="showPage('members'); loadFamilyMembers();">
+    ← Back to Family Members
+</button>
 
             <div style="text-align:center;margin-top:20px;">
                 ${photo}
