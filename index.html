@@ -800,13 +800,10 @@ if (photoFile) {
     photoUrl = publicUrlData.publicUrl;
     }
     const { data, error } = await supabaseClient
-        .from("family_members")
-        .insert([
-            {
-                .insert([
-    {
-        member_number: memberNumber,
-        first_name: firstName,
+    .from("family_members")
+    .insert([
+        {
+            first_name: firstName,
                 middle_names: middleNames || null,
                 surname: surname,
                 display_name: displayName || `${firstName} ${surname}`,
