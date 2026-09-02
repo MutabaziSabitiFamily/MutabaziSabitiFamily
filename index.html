@@ -342,7 +342,49 @@ footer {
 </div>
 
 </section>
+    
+<section id="adminDashboard">
 
+    <div class="card">
+        <h2>👑 Administrator Dashboard</h2>
+        <p>Welcome to the family administration area.</p>
+    </div>
+
+    <div class="grid">
+
+        <div class="card">
+            <div class="icon">👨‍👩‍👧‍👦</div>
+            <strong>Manage Family Members</strong>
+        </div>
+
+        <div class="card">
+            <div class="icon">📢</div>
+            <strong>Manage Announcements</strong>
+        </div>
+
+        <div class="card">
+            <div class="icon">🎂</div>
+            <strong>Manage Birthdays</strong>
+        </div>
+
+        <div class="card">
+            <div class="icon">📅</div>
+            <strong>Manage Calendar</strong>
+        </div>
+
+        <div class="card">
+            <div class="icon">📸</div>
+            <strong>Manage Gallery</strong>
+        </div>
+
+        <div class="card">
+            <div class="icon">📖</div>
+            <strong>Manage Family Book</strong>
+        </div>
+
+    </div>
+
+</section>
 <section id="tree">
 
 <div class="card">
@@ -1488,7 +1530,8 @@ loadAnnouncements();
 loadFamilyBook();
 
 function openAdminDashboard() {
-    alert("Administrator Dashboard is opening...");
+    document.getElementById("home").classList.remove("active");
+    document.getElementById("adminDashboard").classList.add("active");
 }
 
 </script>
