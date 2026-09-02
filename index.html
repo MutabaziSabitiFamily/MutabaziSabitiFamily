@@ -1524,6 +1524,15 @@ async function loadFamilyBook() {
 
     book.innerHTML = html;
     }    
+ function openFamilyMembersAdmin() {
+    const section = document.getElementById("familyMembersAdmin");
+
+    if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+    } else {
+        alert("Family Members management area is not available yet.");
+    }
+    }   
 loadFamilyMembers();
 loadFamilyGallery();
 loadBirthdays();
