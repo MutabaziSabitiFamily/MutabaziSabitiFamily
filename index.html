@@ -352,8 +352,7 @@ footer {
 
     <div class="grid">
 
-        <div class="card" onclick="openFamilyMembersAdmin()" style="cursor:pointer;">
-    <div class="icon">👨‍👩‍👧‍👦</div>
+        <<div class="card" onclick="showPage('familyMembersAdmin')" style="cursor:pointer;">
     <strong>Manage Family Members</strong>
     <p>View and manage family members</p>
 </div>
@@ -413,11 +412,9 @@ footer {
 
         <button class="primary" onclick="addFamilyMember()">
             ➕ Add Family Member
-        </button>
-
-        <button onclick="showSection('adminDashboard')">
-            ⬅️ Back to Administrator Dashboard
-        </button>
+        <button onclick="showPage('adminDashboard')">
+    ⬅️ Back to Administrator Dashboard
+</button>
 
         <p id="memberAdminMessage"></p>
     </div>
