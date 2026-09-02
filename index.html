@@ -1636,7 +1636,7 @@ members.forEach(member => {
         }
     });
 
-    function buildGeneration(parent) {
+    function buildGeneration(parent, level = 1) {
 
         const childList = children[parent.id] || [];
 
@@ -1650,7 +1650,7 @@ members.forEach(member => {
             <div class="tree-generation">
 
                 <div class="tree-generation-label">
-    👨‍👩‍👧‍👦 Descendants
+    ${getGenerationLabel(level)}
 </div>
         `;
 
@@ -1669,7 +1669,7 @@ members.forEach(member => {
 
                         ${coupleCard(child)}
 
-                        ${buildGeneration(child)}
+                        ${buildGeneration(child, level + 1)}
 
                     </div>
                 `;
@@ -1718,6 +1718,26 @@ members.forEach(member => {
 
     container.innerHTML = html;
 }
+    function getGenerationLabel(level) {
+
+    if (level === 0) {
+        return "👑 Grandparents";
+    }
+
+    if (level === 1) {
+        return "👨‍👩‍👧‍👦 Children";
+    }
+
+    if (level === 2) {
+        return "👶 Grandchildren";
+    }
+
+    if (level === 3) {
+        return "🌱 Great-grandchildren";
+    }
+
+    return "🌳 Later Generations";
+    }
 async function loadFamilyBook() {
 
     const book = document.getElementById("book");
