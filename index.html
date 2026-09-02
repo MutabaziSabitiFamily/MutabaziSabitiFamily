@@ -392,23 +392,110 @@ footer {
         <h2>👨‍👩‍👧‍👦 Manage Family Members</h2>
         <p>Add and manage members of the Mutabazi Sabiti Family.</p>
 
-        <input
-            type="text"
-            id="memberName"
-            placeholder="Full name"
-        >
+        <label>First Name</label>
+<input
+    type="text"
+    id="memberFirstName"
+    placeholder="First name"
+>
 
-        <input
-            type="text"
-            id="memberRelationship"
-            placeholder="Relationship (e.g. Father, Mother, Son)"
-        >
+<label>Middle Names</label>
+<input
+    type="text"
+    id="memberMiddleNames"
+    placeholder="Middle names (optional)"
+>
 
-        <input
-            type="text"
-            id="memberLocation"
-            placeholder="Location"
-        >
+<label>Surname</label>
+<input
+    type="text"
+    id="memberSurname"
+    placeholder="Surname"
+>
+
+<label>Display Name</label>
+<input
+    type="text"
+    id="memberDisplayName"
+    placeholder="Name displayed in the family portal"
+>
+
+<label>Preferred Name</label>
+<input
+    type="text"
+    id="memberPreferredName"
+    placeholder="Preferred name (optional)"
+>
+
+<label>Date of Birth</label>
+<input
+    type="date"
+    id="memberDateOfBirth"
+>
+
+<label>Gender</label>
+<select id="memberGender">
+    <option value="">Select gender</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+</select>
+
+<label>Occupation</label>
+<input
+    type="text"
+    id="memberOccupation"
+    placeholder="Occupation"
+>
+
+<label>Phone</label>
+<input
+    type="tel"
+    id="memberPhone"
+    placeholder="Phone number"
+>
+
+<label>Email</label>
+<input
+    type="email"
+    id="memberEmail"
+    placeholder="Email address"
+>
+
+<label>Village</label>
+<input
+    type="text"
+    id="memberVillage"
+    placeholder="Village"
+>
+
+<label>District</label>
+<input
+    type="text"
+    id="memberDistrict"
+    placeholder="District"
+>
+
+<label>Country</label>
+<input
+    type="text"
+    id="memberCountry"
+    value="Uganda"
+    placeholder="Country"
+>
+
+<label>Role</label>
+<input
+    type="text"
+    id="memberRole"
+    placeholder="Family role (e.g. Parent, Child, Grandparent)"
+>
+
+<label>Biography</label>
+<textarea
+    id="memberBiography"
+    placeholder="Short family biography"
+    rows="4"
+></textarea>
 
         <button class="primary" onclick="addFamilyMember()">
             ➕ Add Family Member
