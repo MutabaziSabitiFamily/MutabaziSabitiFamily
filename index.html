@@ -768,8 +768,7 @@ async function loadAnnouncements() {
     const { data, error } = await supabaseClient
         .from("Announcements")
         .select("id, title, content")
-        .order("announcement_date", { ascending: false });
-
+.order("created_at", { ascending: false });
     if (error) {
         announcements.innerHTML = `
             <div class="card">
@@ -803,9 +802,10 @@ async function loadAnnouncements() {
         html += `
             <div class="card">
                 <h3>📢 ${announcement.title}</h3>
-                ${announcement.announcement_date
-                    ? `<p><strong>Date:</strong> ${announcement.announcement_date}</p>`
-                    : ""}
+
+${announcement.content
+    ? `<p>${announcement.content}</p>`
+    : ""}
                 ${announcement.content
     ? `<p>${announcement.content}</p>`
     : ""}
