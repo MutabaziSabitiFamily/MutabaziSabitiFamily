@@ -767,24 +767,7 @@ async function loadFamilyMembers() {
     const role = document.getElementById("memberRole").value.trim();
     const biography = document.getElementById("memberBiography").value.trim();
 const photoFile = document.getElementById("memberProfilePhoto").files[0];
-        const { data: lastMember } = await supabaseClient
-    .from("family_members")
-    .select("member_number")
-    .order("member_number", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-let nextNumber = 1;
-
-if (lastMember && lastMember.member_number) {
-    const numberPart = parseInt(lastMember.member_number.replace("MSF-", ""), 10);
-
-    if (!isNaN(numberPart)) {
-        nextNumber = numberPart + 1;
-    }
-}
-
-const memberNumber = `MSF-${String(nextNumber).padStart(3, "0")}`;
+        
     if (!firstName || !surname) {
         message.textContent = "Please enter the first name and surname.";
         return;
