@@ -386,6 +386,46 @@ footer {
     </div>
 
 </section>
+
+<section id="familyMembersAdmin">
+
+    <div class="card">
+        <h2>👨‍👩‍👧‍👦 Manage Family Members</h2>
+        <p>Add and manage members of the Mutabazi Sabiti Family.</p>
+
+        <input
+            type="text"
+            id="memberName"
+            placeholder="Full name"
+        >
+
+        <input
+            type="text"
+            id="memberRelationship"
+            placeholder="Relationship (e.g. Father, Mother, Son)"
+        >
+
+        <input
+            type="text"
+            id="memberLocation"
+            placeholder="Location"
+        >
+
+        <button class="primary" onclick="addFamilyMember()">
+            ➕ Add Family Member
+        </button>
+
+        <button onclick="showSection('adminDashboard')">
+            ⬅️ Back to Administrator Dashboard
+        </button>
+
+        <p id="memberAdminMessage"></p>
+    </div>
+
+    <div id="adminFamilyMembers"></div>
+
+</section>
+
 <section id="tree">
 
 <div class="card">
