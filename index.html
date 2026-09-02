@@ -1584,26 +1584,30 @@ function displayFamilyTree(members) {
 
     const children = {};
 
-    members.forEach(member => {
+members.forEach(member => {
 
-        if (member.father_id) {
+    if (member.father_id) {
 
-            if (!children[member.father_id]) {
-                children[member.father_id] = [];
-            }
+        if (!children[member.father_id]) {
+            children[member.father_id] = [];
+        }
 
+        if (!children[member.father_id].some(child => child.id === member.id)) {
             children[member.father_id].push(member);
         }
+    }
 
-        if (member.mother_id) {
+    if (member.mother_id) {
 
-            if (!children[member.mother_id]) {
-                children[member.mother_id] = [];
-            }
+        if (!children[member.mother_id]) {
+            children[member.mother_id] = [];
+        }
 
+        if (!children[member.mother_id].some(child => child.id === member.id)) {
             children[member.mother_id].push(member);
         }
-    });
+    }
+});
 
     const roots = members.filter(member =>
         !member.father_id &&
