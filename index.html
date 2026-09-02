@@ -558,7 +558,6 @@ footer {
 <div id="membersList"></div>
 
 </section>
-</section>
 
 <section id="gallery">
 </section>
@@ -1296,7 +1295,7 @@ function filterMembers() {
     membersSection.innerHTML = `
         <div class="card">
 
-            <button onclick="showPage('members'); loadFamilyMembers();">
+            <button onclick="returnToMembersDirectory()">
     ← Back to Family Members
 </button>
 
@@ -1399,6 +1398,29 @@ function filterMembers() {
 
         </div>
     `;
+    }
+    function returnToMembersDirectory() {
+
+    const membersSection = document.getElementById("members");
+
+    membersSection.innerHTML = `
+        <div class="card">
+            <h2>👨‍👩‍👧‍👦 Family Members</h2>
+            <p>Our family directory</p>
+
+            <input
+                type="search"
+                id="memberSearch"
+                placeholder="🔎 Search family members..."
+                oninput="filterMembers()"
+            >
+        </div>
+
+        <div id="membersList"></div>
+    `;
+
+    showPage("members");
+    loadFamilyMembers();
     }
     async function loadFamilyTree() {
 
