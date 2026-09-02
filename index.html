@@ -1398,10 +1398,88 @@ function displayFamilyTree(members) {
 
     container.innerHTML = html;
 }
+async function loadFamilyBook() {
+
+    const book = document.getElementById("book");
+
+    if (!book) return;
+
+    book.innerHTML = `
+        <div class="card">
+            <h2>📖 Our Family Book</h2>
+            <p>Loading our family book...</p>
+        </div>
+    `;
+
+    const { data, error } = await supabaseClient
+        .from("family_book")
+        .select(`
+            id,
+            title,
+            chapter_number,
+            content,
+            cover_image_url,
+            section_type,
+            display_order
+        `)
+        .order("display_order", { ascending: true });
+
+    if (error) {
+        book.innerHTML = `
+            <div class="card">
+                <h3>Family Book database error</h3>
+                <p>${error.message}</p>
+            </div>
+        `;
+        console.error("Family Book error:", error);
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        book.innerHTML = `
+            <div class="card">
+                <h2>📖 Our Family Book</h2>
+                <p>No family book content has been added yet.</p>
+            </div>
+        `;
+        return;
+    }
+
+    let html = `
+        <div class="card">
+            <h2>📖 Our Family Book</h2>
+            <p><strong>Our roots, our strength, our legacy.</strong></p>
+        </div>
+    `;
+
+    data.forEach(section => {
+
+        html += `
+            <div class="card">
+
+                ${section.chapter_number
+                    ? `<h2>Chapter ${section.chapter_number}</h2>`
+                    : ""}
+
+                ${section.title
+                    ? `<h3>${section.title}</h3>`
+                    : ""}
+
+                ${section.content
+                    ? `<div>${section.content}</div>`
+                    : ""}
+
+            </div>
+        `;
+    });
+
+    book.innerHTML = html;
+    }    
 loadFamilyMembers();
 loadFamilyGallery();
 loadBirthdays();
 loadAnnouncements();
+loadFamilyBook();
 </script>
 </body>
     
