@@ -1224,12 +1224,125 @@ async function loadBirthdays() {
                 ${birthday.description
                     ? `<p>${birthday.description}</p>`
                     : ""}
+                    <button class="primary"
+    onclick="editFamilyBirthday('${birthday.id}')">
+    ✏️ Edit Birthday
+</button>
             </div>
         `;
     });
 
     container.innerHTML = html;
 }
+    async function editFamilyBirthday(birthdayId) {
+
+    const { data: birthday, error } = await supabaseClient
+        .from("family_birthdays")
+        .select("*")
+        .eq("id", birthdayId)
+        .single();
+
+    if (error) {
+        alert("Unable to load this birthday.");
+        console.error(error);
+        return;
+    }
+
+    document.getElementById("birthdayMemberName").value =
+        birthday.member_name || "";
+
+    document.getElementById("birthdayDate").value =
+        birthday.birth_date || "";
+
+    document.getElementById("birthdayDescription").value =
+        birthday.description || "";
+
+    window.editingBirthdayId = birthdayId;
+
+    const button =
+        document.querySelector('#birthdaysAdmin button.primary');
+
+    button.textContent = "💾 Save Birthday";
+
+    button.setAttribute(
+        "onclick",
+        "updateFamilyBirthday()"
+    );
+
+    document.getElementById("birthdayAdminMessage").textContent =
+        "✏️ Editing birthday for " + birthday.member_name;
+
+    document.getElementById("birthdaysAdmin").scrollIntoView({
+        behavior: "smooth"
+    });
+    }
+    async function updateFamilyBirthday() {
+
+    const birthdayId = window.editingBirthdayId;
+
+    if (!birthdayId) {
+        alert("No birthday is currently being edited.");
+        return;
+    }
+
+    const message = document.getElementById("birthdayAdminMessage");
+
+    const memberName =
+        document.getElementById("birthdayMemberName").value.trim();
+
+    const birthDate =
+        document.getElementById("birthdayDate").value;
+
+    const description =
+        document.getElementById("birthdayDescription").value.trim();
+
+    if (!memberName || !birthDate) {
+        message.textContent =
+            "Please enter the family member's name and birthday.";
+        return;
+    }
+
+    message.textContent = "Saving birthday...";
+
+    const { error } = await supabaseClient
+        .from("family_birthdays")
+        .update({
+            member_name: memberName,
+            birth_date: birthDate,
+            description: description || null
+        })
+        .eq("id", birthdayId);
+
+    if (error) {
+        message.textContent =
+            "Unable to save birthday: " + error.message;
+
+        console.error(error);
+        return;
+    }
+
+    message.textContent =
+        "✅ Birthday updated successfully.";
+
+    window.editingBirthdayId = null;
+
+    const button =
+        document.querySelector('#birthdaysAdmin button.primary');
+
+    button.textContent = "➕ Add Birthday";
+
+    button.setAttribute(
+        "onclick",
+        "addFamilyBirthday()"
+    );
+
+    document.getElementById("birthdayMemberName").value = "";
+    document.getElementById("birthdayDate").value = "";
+    document.getElementById("birthdayDescription").value = "";
+
+    await loadAdminBirthdays();
+    await loadBirthdays();
+    }
 async function addFamilyBirthday() {
 
     const memberName =
