@@ -543,10 +543,12 @@ footer {
 ></textarea>
 
         <button class="primary" onclick="addFamilyMember()">
-            ➕ Add Family Member
-        <button onclick="showPage('adminDashboard')">
-    ⬅️ Back to Administrator Dashboard
+    ➕ Add Family Member
 </button>
+
+<button onclick="showPage('adminDashboard')">
+    ⬅️ Back to Administrator Dashboard
+    </button>
 
         <p id="memberAdminMessage"></p>
     </div>
@@ -1988,6 +1990,13 @@ async function loadFamilyBook() {
     document.getElementById("memberBiography").value = member.biography || "";
 
     window.editingMemberId = memberId;
+        document.querySelector('#familyMembersAdmin button.primary').textContent =
+    "💾 Save Changes";
+
+document.querySelector('#familyMembersAdmin button.primary').setAttribute(
+    "onclick",
+    "updateFamilyMember()"
+);
 
     document.getElementById("memberAdminMessage").textContent =
         "✏️ Editing " + (member.display_name || member.first_name);
@@ -1996,6 +2005,74 @@ async function loadFamilyBook() {
         behavior: "smooth"
     });
 }
+    async function updateFamilyMember() {
+
+    const memberId = window.editingMemberId;
+
+    if (!memberId) {
+        alert("No family member is currently being edited.");
+        return;
+    }
+
+    const message = document.getElementById("memberAdminMessage");
+
+    const firstName = document.getElementById("memberFirstName").value.trim();
+    const middleNames = document.getElementById("memberMiddleNames").value.trim();
+    const surname = document.getElementById("memberSurname").value.trim();
+    const displayName = document.getElementById("memberDisplayName").value.trim();
+    const preferredName = document.getElementById("memberPreferredName").value.trim();
+    const dateOfBirth = document.getElementById("memberDateOfBirth").value;
+    const gender = document.getElementById("memberGender").value;
+    const occupation = document.getElementById("memberOccupation").value.trim();
+    const phone = document.getElementById("memberPhone").value.trim();
+    const email = document.getElementById("memberEmail").value.trim();
+    const village = document.getElementById("memberVillage").value.trim();
+    const district = document.getElementById("memberDistrict").value.trim();
+    const country = document.getElementById("memberCountry").value.trim();
+    const role = document.getElementById("memberRole").value.trim();
+    const biography = document.getElementById("memberBiography").value.trim();
+
+    if (!firstName || !surname) {
+        message.textContent = "Please enter the first name and surname.";
+        return;
+    }
+
+    message.textContent = "Saving changes...";
+
+    const { error } = await supabaseClient
+        .from("family_members")
+        .update({
+            first_name: firstName,
+            middle_names: middleNames || null,
+            surname: surname,
+            display_name: displayName || `${firstName} ${surname}`,
+            preferred_name: preferredName || null,
+            date_of_birth: dateOfBirth || null,
+            gender: gender || null,
+            occupation: occupation || null,
+            phone: phone || null,
+            email: email || null,
+            village: village || null,
+            district: district || null,
+            country: country || "Uganda",
+            role: role || null,
+            biography: biography || null
+        })
+        .eq("id", memberId);
+
+    if (error) {
+        message.textContent = "Unable to save changes: " + error.message;
+        console.error(error);
+        return;
+    }
+
+    message.textContent = "✅ Family member updated successfully.";
+
+    window.editingMemberId = null;
+
+    await loadFamilyMembers();
+    await loadAdminFamilyMembers();
+    }
 loadFamilyMembers();
 loadFamilyGallery();
 loadBirthdays();
