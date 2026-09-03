@@ -1950,15 +1950,62 @@ async function loadFamilyBook() {
                     : ""}
 
                 <button class="primary"
-                    onclick="editFamilyMember('${member.id}')">
-                    ✏️ Edit Member
-                </button>
+    onclick="editFamilyMember('${member.id}')">
+    ✏️ Edit Member
+</button>
+
+<button
+    onclick="deleteFamilyMember('${member.id}', '${name.replace(/'/g, "\\'")}')">
+    🗑️ Delete Member
+</button>
             </div>
         `;
     });
 
     container.innerHTML = html;
 }
+    async function deleteFamilyMember(memberId, memberName) {
+
+    const confirmed = confirm(
+        "Are you sure you want to delete " +
+        memberName +
+        " from the family database?\n\nThis action cannot be undone."
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const message = document.getElementById("memberAdminMessage");
+
+    if (message) {
+        message.textContent = "Deleting " + memberName + "...";
+    }
+
+    const { error } = await supabaseClient
+        .from("family_members")
+        .delete()
+        .eq("id", memberId);
+
+    if (error) {
+
+        if (message) {
+            message.textContent =
+                "Unable to delete member: " + error.message;
+        }
+
+        console.error(error);
+        return;
+    }
+
+    if (message) {
+        message.textContent =
+            "✅ " + memberName + " was deleted successfully.";
+    }
+
+    await loadFamilyMembers();
+    await loadAdminFamilyMembers();
+    }
     async function editFamilyMember(memberId) {
 
     const { data: member, error } = await supabaseClient
