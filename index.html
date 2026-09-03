@@ -2068,10 +2068,16 @@ document.querySelector('#familyMembersAdmin button.primary').setAttribute(
 
     message.textContent = "✅ Family member updated successfully.";
 
-    window.editingMemberId = null;
+window.editingMemberId = null;
 
-    await loadFamilyMembers();
-    await loadAdminFamilyMembers();
+const saveButton =
+    document.querySelector('#familyMembersAdmin button.primary');
+
+saveButton.textContent = "➕ Add Family Member";
+saveButton.setAttribute("onclick", "addFamilyMember()");
+
+await loadFamilyMembers();
+await loadAdminFamilyMembers();
     }
 loadFamilyMembers();
 loadFamilyGallery();
