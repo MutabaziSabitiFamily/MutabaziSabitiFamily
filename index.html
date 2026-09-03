@@ -1988,6 +1988,7 @@ async function loadFamilyBook() {
     document.getElementById("memberCountry").value = member.country || "Uganda";
     document.getElementById("memberRole").value = member.role || "";
     document.getElementById("memberBiography").value = member.biography || "";
+        document.getElementById("memberProfilePhoto").value = "";
 
     window.editingMemberId = memberId;
         document.querySelector('#familyMembersAdmin button.primary').textContent =
@@ -2031,6 +2032,7 @@ document.querySelector('#familyMembersAdmin button.primary').setAttribute(
     const country = document.getElementById("memberCountry").value.trim();
     const role = document.getElementById("memberRole").value.trim();
     const biography = document.getElementById("memberBiography").value.trim();
+        const photoFile = document.getElementById("memberProfilePhoto").files[0];
 
     if (!firstName || !surname) {
         message.textContent = "Please enter the first name and surname.";
@@ -2038,27 +2040,62 @@ document.querySelector('#familyMembersAdmin button.primary').setAttribute(
     }
 
     message.textContent = "Saving changes...";
+        let photoUrl = null;
 
-    const { error } = await supabaseClient
-        .from("family_members")
-        .update({
-            first_name: firstName,
-            middle_names: middleNames || null,
-            surname: surname,
-            display_name: displayName || `${firstName} ${surname}`,
-            preferred_name: preferredName || null,
-            date_of_birth: dateOfBirth || null,
-            gender: gender || null,
-            occupation: occupation || null,
-            phone: phone || null,
-            email: email || null,
-            village: village || null,
-            district: district || null,
-            country: country || "Uganda",
-            role: role || null,
-            biography: biography || null
-        })
-        .eq("id", memberId);
+if (photoFile) {
+
+    const fileExtension = photoFile.name.split(".").pop();
+
+    const fileName =
+        `${Date.now()}_${firstName}_${surname}.${fileExtension}`;
+
+    const { error: uploadError } = await supabaseClient
+        .storage
+        .from("family_photos")
+        .upload(fileName, photoFile);
+
+    if (uploadError) {
+        message.textContent =
+            "Unable to upload profile photo: " + uploadError.message;
+
+        console.error(uploadError);
+        return;
+    }
+
+    const { data: publicUrlData } = supabaseClient
+        .storage
+        .from("family_photos")
+        .getPublicUrl(fileName);
+
+    photoUrl = publicUrlData.publicUrl;
+    }
+
+    const updateData = {
+    first_name: firstName,
+    middle_names: middleNames || null,
+    surname: surname,
+    display_name: displayName || `${firstName} ${surname}`,
+    preferred_name: preferredName || null,
+    date_of_birth: dateOfBirth || null,
+    gender: gender || null,
+    occupation: occupation || null,
+    phone: phone || null,
+    email: email || null,
+    village: village || null,
+    district: district || null,
+    country: country || "Uganda",
+    role: role || null,
+    biography: biography || null
+};
+
+if (photoUrl) {
+    updateData.profile_photo_url = photoUrl;
+}
+
+const { error } = await supabaseClient
+    .from("family_members")
+    .update(updateData)
+    .eq("id", memberId);
 
     if (error) {
         message.textContent = "Unable to save changes: " + error.message;
