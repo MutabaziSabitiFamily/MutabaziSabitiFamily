@@ -306,7 +306,7 @@ footer {
 
         <p id="loginMessage" class="small"></p>
     </div>
-</div>9
+</div>
 <header>
     <h1>Mutabazi Sabiti Family</h1>
     <p>Our roots, our strength, our legacy.</p>
@@ -351,10 +351,6 @@ footer {
     <strong>Family Members</strong>
 </div>
 
-    <div class="card">
-    <div class="icon">👨‍👩‍👧‍👦</div>
-    <strong>Family Members</strong>
-</div>
 
 <div class="card">
     <h3>🎂 Birthday Management</h3>
@@ -403,7 +399,7 @@ footer {
 
     <div class="grid">
 
-        <<div class="card" onclick="showPage('familyMembersAdmin')" style="cursor:pointer;">
+        <div class="card" onclick="showPage('familyMembersAdmin')" style="cursor:pointer;">
     <strong>Manage Family Members</strong>
     <p>View and manage family members</p>
 </div>
@@ -1333,9 +1329,7 @@ async function loadAnnouncements() {
             <div class="card">
                 <h3>📢 ${announcement.title}</h3>
 
-${announcement.content
-    ? `<p>${announcement.content}</p>`
-    : ""}
+
                 ${announcement.content
     ? `<p>${announcement.content}</p>`
     : ""}
