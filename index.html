@@ -1957,6 +1957,45 @@ async function loadFamilyBook() {
 
     container.innerHTML = html;
 }
+    async function editFamilyMember(memberId) {
+
+    const { data: member, error } = await supabaseClient
+        .from("family_members")
+        .select("*")
+        .eq("id", memberId)
+        .single();
+
+    if (error) {
+        alert("Unable to load this family member.");
+        console.error(error);
+        return;
+    }
+
+    document.getElementById("memberFirstName").value = member.first_name || "";
+    document.getElementById("memberMiddleNames").value = member.middle_names || "";
+    document.getElementById("memberSurname").value = member.surname || "";
+    document.getElementById("memberDisplayName").value = member.display_name || "";
+    document.getElementById("memberPreferredName").value = member.preferred_name || "";
+    document.getElementById("memberDateOfBirth").value = member.date_of_birth || "";
+    document.getElementById("memberGender").value = member.gender || "";
+    document.getElementById("memberOccupation").value = member.occupation || "";
+    document.getElementById("memberPhone").value = member.phone || "";
+    document.getElementById("memberEmail").value = member.email || "";
+    document.getElementById("memberVillage").value = member.village || "";
+    document.getElementById("memberDistrict").value = member.district || "";
+    document.getElementById("memberCountry").value = member.country || "Uganda";
+    document.getElementById("memberRole").value = member.role || "";
+    document.getElementById("memberBiography").value = member.biography || "";
+
+    window.editingMemberId = memberId;
+
+    document.getElementById("memberAdminMessage").textContent =
+        "✏️ Editing " + (member.display_name || member.first_name);
+
+    document.getElementById("familyMembersAdmin").scrollIntoView({
+        behavior: "smooth"
+    });
+}
 loadFamilyMembers();
 loadFamilyGallery();
 loadBirthdays();
