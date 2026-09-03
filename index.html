@@ -351,6 +351,19 @@ footer {
     <strong>Family Members</strong>
 </div>
 
+    <div class="card">
+    <div class="icon">👨‍👩‍👧‍👦</div>
+    <strong>Family Members</strong>
+</div>
+
+<div class="card">
+    <h3>🎂 Birthday Management</h3>
+    <p>Add and manage family birthdays.</p>
+
+    <button class="primary" onclick="openBirthdaysAdmin()">
+        🎂 Manage Birthdays
+    </button>
+</div>
 <div class="card">
     <div class="icon">📸</div>
     <strong>Family Gallery</strong>
@@ -1104,7 +1117,22 @@ async function loadBirthdays() {
 
     birthdays.innerHTML = html;
 }
-    
+
+    function openBirthdaysAdmin() {
+
+    const birthdaysSection = document.getElementById("birthdays");
+
+    if (!birthdaysSection) {
+        alert("Birthday management area is not available yet.");
+        return;
+    }
+
+    showPage("birthdays");
+
+    birthdaysSection.scrollIntoView({
+        behavior: "smooth"
+    });
+    }
 async function loadAnnouncements() {
 
     const announcements = document.getElementById("announcements");
