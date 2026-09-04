@@ -1605,6 +1605,10 @@ async function loadAdminAnnouncements() {
                     onclick="editAnnouncement('${announcement.id}')">
                     ✏️ Edit Announcement
                 </button>
+                <button
+    onclick="deleteAnnouncement('${announcement.id}', '${announcement.title.replace(/'/g, "\\'")}')">
+    🗑️ Delete Announcement
+</button>
             </div>
         `;
     });
