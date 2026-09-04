@@ -3238,10 +3238,26 @@ loadAnnouncements();
 loadFamilyBook();
 
 function openAdminDashboard() {
-    document.getElementById("home").classList.remove("active");
-    document.getElementById("adminDashboard").classList.add("active");
 
-    loadAdminFamilyMembers();
+    const user = supabaseClient.auth.getUser();
+
+    user.then(({ data, error }) => {
+
+        if (error || !data.user) {
+            alert("Please log in first.");
+            return;
+        }
+
+        if (data.user.email !== "mutabazimbabazi@gmail.com") {
+            alert("Access denied. Administrator access only.");
+            return;
+        }
+
+        document.getElementById("home").classList.remove("active");
+        document.getElementById("adminDashboard").classList.add("active");
+
+        loadAdminFamilyMembers();
+    });
 }
 async function addGalleryPhoto() {
 
