@@ -2010,6 +2010,73 @@ async function loadAdminAnnouncements() {
         behavior: "smooth"
     });
 }
+    async function updateCalendarEvent() {
+
+    const eventId = window.editingCalendarEventId;
+
+    if (!eventId) {
+        alert("No calendar event is currently being edited.");
+        return;
+    }
+
+    const title =
+        document.getElementById("calendarEventTitle").value.trim();
+
+    const eventDate =
+        document.getElementById("calendarEventDate").value;
+
+    const description =
+        document.getElementById("calendarEventDescription").value.trim();
+
+    const message =
+        document.getElementById("calendarAdminMessage");
+
+    if (!title || !eventDate) {
+        message.textContent =
+            "Please enter the event title and date.";
+        return;
+    }
+
+    message.textContent = "Saving calendar event...";
+
+    const { error } = await supabaseClient
+        .from("family_calendar")
+        .update({
+            title: title,
+            event_date: eventDate,
+            description: description || null
+        })
+        .eq("id", eventId);
+
+    if (error) {
+        message.textContent =
+            "Unable to save calendar event: " + error.message;
+
+        console.error("Update calendar event error:", error);
+        return;
+    }
+
+    message.textContent =
+        "✅ Calendar event updated successfully.";
+
+    window.editingCalendarEventId = null;
+
+    const button =
+        document.querySelector('#calendarAdmin button.primary');
+
+    button.textContent = "➕ Add Calendar Event";
+
+    button.setAttribute(
+        "onclick",
+        "addCalendarEvent()"
+    );
+
+    document.getElementById("calendarEventTitle").value = "";
+    document.getElementById("calendarEventDate").value = "";
+    document.getElementById("calendarEventDescription").value = "";
+
+    await loadAdminCalendar();
+    }
 async function loadCalendar() {
 
     const calendar = document.getElementById("calendar");
