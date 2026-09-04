@@ -747,10 +747,14 @@ footer {
 </section>
 
 <section id="calendar">
+
 <div class="card">
-<h2>📅 Family Calendar</h2>
-<p>Family events and important dates will appear here.</p>
+    <h2>📅 Family Calendar</h2>
+    <p>Family events and important dates</p>
 </div>
+
+<div id="calendarList"></div>
+
 </section>
 
 <section id="book">
@@ -1971,6 +1975,71 @@ async function loadAdminAnnouncements() {
 
     container.innerHTML = html;
 }
+    async function loadCalendar() {
+
+    const container = document.getElementById("calendarList");
+
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="card">
+            <p>Loading family calendar...</p>
+        </div>
+    `;
+
+    const { data, error } = await supabaseClient
+        .from("family_calendar")
+        .select("id, title, event_date, event_type, description")
+        .order("event_date", { ascending: true });
+
+    if (error) {
+        container.innerHTML = `
+            <div class="card">
+                <h3>Unable to load family calendar</h3>
+                <p>${error.message}</p>
+            </div>
+        `;
+        console.error("Calendar error:", error);
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        container.innerHTML = `
+            <div class="card">
+                <p>No family calendar events have been added yet.</p>
+            </div>
+        `;
+        return;
+    }
+
+    let html = "";
+
+    data.forEach(event => {
+
+        html += `
+            <div class="card">
+
+                <h3>📅 ${event.title}</h3>
+
+                <p>
+                    <strong>Date:</strong>
+                    ${event.event_date}
+                </p>
+
+                ${event.event_type
+                    ? `<p><strong>Type:</strong> ${event.event_type}</p>`
+                    : ""}
+
+                ${event.description
+                    ? `<p>${event.description}</p>`
+                    : ""}
+
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+    }
     async function editCalendarEvent(eventId) {
 
     const { data: event, error } = await supabaseClient
