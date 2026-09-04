@@ -3243,7 +3243,86 @@ function openAdminDashboard() {
 
     loadAdminFamilyMembers();
 }
+async function addGalleryPhoto() {
 
+    const title =
+        document.getElementById("galleryPhotoTitle").value.trim();
+
+    const description =
+        document.getElementById("galleryPhotoDescription").value.trim();
+
+    const fileInput =
+        document.getElementById("galleryPhotoFile");
+
+    const message =
+        document.getElementById("galleryAdminMessage");
+
+    if (!title || !fileInput.files.length) {
+        message.textContent =
+            "Please enter a photo title and select a photo.";
+        return;
+    }
+
+    const file = fileInput.files[0];
+
+    message.textContent = "Uploading photo...";
+
+    const fileName =
+        Date.now() + "_" + file.name.replace(/\s+/g, "_");
+
+    const filePath =
+        "gallery/" + fileName;
+
+    const { error: uploadError } =
+        await supabaseClient.storage
+            .from("family_photos")
+            .upload(filePath, file);
+
+    if (uploadError) {
+        message.textContent =
+            "Unable to upload photo: " +
+            uploadError.message;
+
+        console.error("Gallery upload error:", uploadError);
+        return;
+    }
+
+    const { data: publicUrlData } =
+        supabaseClient.storage
+            .from("family_photos")
+            .getPublicUrl(filePath);
+
+    const photoUrl =
+        publicUrlData.publicUrl;
+
+    const { error: databaseError } =
+        await supabaseClient
+            .from("family_photos")
+            .insert({
+                title: title,
+                description: description || null,
+                photo_url: photoUrl
+            });
+
+    if (databaseError) {
+        message.textContent =
+            "Photo uploaded, but database saving failed: " +
+            databaseError.message;
+
+        console.error(
+            "Gallery database error:",
+            databaseError
+        );
+        return;
+    }
+
+    message.textContent =
+        "✅ Family photo added successfully.";
+
+    document.getElementById("galleryPhotoTitle").value = "";
+    document.getElementById("galleryPhotoDescription").value = "";
+    document.getElementById("galleryPhotoFile").value = "";
+    }
 </script>
 </body>
 </html>
