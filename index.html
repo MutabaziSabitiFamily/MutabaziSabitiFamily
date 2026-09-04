@@ -3297,7 +3297,7 @@ async function addGalleryPhoto() {
 
     const { error: databaseError } =
         await supabaseClient
-            .from("family_photos")
+            .from("family_gallery")
             .insert({
                 title: title,
                 description: description || null,
