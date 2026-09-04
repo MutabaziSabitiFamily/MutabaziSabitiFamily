@@ -1693,6 +1693,69 @@ async function loadAdminAnnouncements() {
         behavior: "smooth"
     });
 }
+    async function updateAnnouncement() {
+
+    const announcementId = window.editingAnnouncementId;
+
+    if (!announcementId) {
+        alert("No announcement is currently being edited.");
+        return;
+    }
+
+    const title =
+        document.getElementById("announcementTitle").value.trim();
+
+    const content =
+        document.getElementById("announcementContent").value.trim();
+
+    const message =
+        document.getElementById("announcementAdminMessage");
+
+    if (!title || !content) {
+        message.textContent =
+            "Please enter an announcement title and content.";
+        return;
+    }
+
+    message.textContent = "Saving announcement...";
+
+    const { error } = await supabaseClient
+        .from("Announcements")
+        .update({
+            title: title,
+            content: content
+        })
+        .eq("id", announcementId);
+
+    if (error) {
+        message.textContent =
+            "Unable to save announcement: " + error.message;
+
+        console.error("Update announcement error:", error);
+        return;
+    }
+
+    message.textContent =
+        "✅ Announcement updated successfully.";
+
+    window.editingAnnouncementId = null;
+
+    const button =
+        document.querySelector('#announcementsAdmin button.primary');
+
+    button.textContent = "➕ Add Announcement";
+
+    button.setAttribute(
+        "onclick",
+        "addAnnouncement()"
+    );
+
+    document.getElementById("announcementTitle").value = "";
+    document.getElementById("announcementContent").value = "";
+
+    await loadAdminAnnouncements();
+    await loadAnnouncements();
+    }
 async function loadCalendar() {
 
     const calendar = document.getElementById("calendar");
