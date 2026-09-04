@@ -1611,6 +1611,49 @@ async function loadAdminAnnouncements() {
 
     container.innerHTML = html;
     }
+    async function addAnnouncement() {
+
+    const title =
+        document.getElementById("announcementTitle").value.trim();
+
+    const content =
+        document.getElementById("announcementContent").value.trim();
+
+    const message =
+        document.getElementById("announcementAdminMessage");
+
+    if (!title || !content) {
+        message.textContent =
+            "Please enter an announcement title and content.";
+        return;
+    }
+
+    message.textContent = "Saving announcement...";
+
+    const { error } = await supabaseClient
+        .from("Announcements")
+        .insert({
+            title: title,
+            content: content
+        });
+
+    if (error) {
+        message.textContent =
+            "Unable to add announcement: " + error.message;
+
+        console.error("Add announcement error:", error);
+        return;
+    }
+
+    message.textContent =
+        "✅ Announcement added successfully.";
+
+    document.getElementById("announcementTitle").value = "";
+    document.getElementById("announcementContent").value = "";
+
+    await loadAdminAnnouncements();
+    await loadAnnouncements();
+}
 async function loadCalendar() {
 
     const calendar = document.getElementById("calendar");
