@@ -417,9 +417,12 @@ footer {
     <strong>Manage Birthdays</strong>
 </div>
 
-        <div class="card">
-            <div class="icon">📅</div>
-            <strong>Manage Calendar</strong>
+        <div class="card"
+     onclick="showPage('calendarAdmin')"
+     style="cursor:pointer;">
+    <div class="icon">📅</div>
+    <strong>Manage Calendar</strong>
+    <p>Add and manage family calendar events</p>
         </div>
 
         <div class="card">
@@ -467,6 +470,46 @@ footer {
     </div>
 
     <div id="adminAnnouncementsList"></div>
+
+    </section>
+    <section id="calendarAdmin">
+
+    <div class="card">
+        <h2>📅 Manage Family Calendar</h2>
+        <p>Add and manage important family events.</p>
+
+        <label>Event Title</label>
+        <input
+            type="text"
+            id="calendarEventTitle"
+            placeholder="Enter event title"
+        >
+
+        <label>Event Date</label>
+        <input
+            type="date"
+            id="calendarEventDate"
+        >
+
+        <label>Event Description</label>
+        <textarea
+            id="calendarEventDescription"
+            placeholder="Write a description of the event..."
+            rows="4"
+        ></textarea>
+
+        <button class="primary" onclick="addCalendarEvent()">
+            ➕ Add Calendar Event
+        </button>
+
+        <button onclick="showPage('adminDashboard')">
+            ⬅️ Back to Administrator Dashboard
+        </button>
+
+        <p id="calendarAdminMessage"></p>
+    </div>
+
+    <div id="adminCalendarList"></div>
 
     </section>
 
