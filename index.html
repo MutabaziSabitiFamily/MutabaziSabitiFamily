@@ -1756,6 +1756,50 @@ async function loadAdminAnnouncements() {
     await loadAdminAnnouncements();
     await loadAnnouncements();
     }
+    async function deleteAnnouncement(announcementId, announcementTitle) {
+
+    const confirmed = confirm(
+        "Are you sure you want to delete this announcement?\n\n" +
+        announcementTitle +
+        "\n\nThis action cannot be undone."
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const message =
+        document.getElementById("announcementAdminMessage");
+
+    if (message) {
+        message.textContent =
+            "Deleting announcement...";
+    }
+
+    const { error } = await supabaseClient
+        .from("Announcements")
+        .delete()
+        .eq("id", announcementId);
+
+    if (error) {
+
+        if (message) {
+            message.textContent =
+                "Unable to delete announcement: " + error.message;
+        }
+
+        console.error("Delete announcement error:", error);
+        return;
+    }
+
+    if (message) {
+        message.textContent =
+            "✅ Announcement deleted successfully.";
+    }
+
+    await loadAdminAnnouncements();
+    await loadAnnouncements();
+    }
 async function loadCalendar() {
 
     const calendar = document.getElementById("calendar");
