@@ -515,7 +515,48 @@ footer {
     <div id="adminCalendarList"></div>
 
     </section>
+    
+<section id="galleryAdmin">
 
+    <div class="card">
+        <h2>📸 Manage Family Gallery</h2>
+        <p>Add and manage family photos.</p>
+
+        <label>Photo Title</label>
+        <input
+            type="text"
+            id="galleryPhotoTitle"
+            placeholder="Enter photo title"
+        >
+
+        <label>Photo Description</label>
+        <textarea
+            id="galleryPhotoDescription"
+            placeholder="Write a description of the photo..."
+            rows="4"
+        ></textarea>
+
+        <label>Select Photo</label>
+        <input
+            type="file"
+            id="galleryPhotoFile"
+            accept="image/*"
+        >
+
+        <button class="primary">
+            ➕ Add Family Photo
+        </button>
+
+        <button onclick="showPage('adminDashboard')">
+            ⬅️ Back to Administrator Dashboard
+        </button>
+
+        <p id="galleryAdminMessage"></p>
+    </div>
+
+    <div id="adminGalleryList"></div>
+
+</section>
 <section id="familyMembersAdmin">
 
     <div class="card">
