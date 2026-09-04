@@ -380,7 +380,7 @@ footer {
     <strong>Family Book</strong>
 </div>
 
-<div class="card">
+<div class="card" id="adminDashboardCard" style="display: none;">
     <h2>👑 Administrator Dashboard</h2>
     <p>Manage family information, announcements, birthdays, calendar events, gallery and the family book.</p>
     <button class="primary" onclick="openAdminDashboard()">
@@ -916,6 +916,25 @@ document.getElementById("loginScreen").style.display = "none";
 loadFamilyMembers();
 loadAnnouncements();
 loadCalendar();
+    checkAdminAccess();
+    }
+    async function checkAdminAccess() {
+
+    const { data, error } = await supabaseClient.auth.getUser();
+
+    const adminCard = document.getElementById("adminDashboardCard");
+
+    if (!adminCard) return;
+
+    if (
+        !error &&
+        data.user &&
+        data.user.email === "mutabazimbabazi@gmail.com"
+    ) {
+        adminCard.style.display = "block";
+    } else {
+        adminCard.style.display = "none";
+    }
     }
 async function loadFamilyMembers() {
 
