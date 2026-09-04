@@ -404,10 +404,13 @@ footer {
     <p>View and manage family members</p>
 </div>
 
-        <div class="card">
-            <div class="icon">📢</div>
-            <strong>Manage Announcements</strong>
-        </div>
+        <div class="card"
+     onclick="showPage('announcementsAdmin')"
+     style="cursor:pointer;">
+    <div class="icon">📢</div>
+    <strong>Manage Announcements</strong>
+    <p>Add and manage family announcements</p>
+</div>
 
         <div class="card" onclick="showPage('birthdaysAdmin'); loadAdminBirthdays();" style="cursor:pointer;">
     <div class="icon">🎂</div>
@@ -432,6 +435,40 @@ footer {
     </div>
 
 </section>
+    <section id="announcementsAdmin">
+
+    <div class="card">
+        <h2>📢 Manage Family Announcements</h2>
+        <p>Add and manage important family announcements.</p>
+
+        <label>Announcement Title</label>
+        <input
+            type="text"
+            id="announcementTitle"
+            placeholder="Enter announcement title"
+        >
+
+        <label>Announcement Content</label>
+        <textarea
+            id="announcementContent"
+            placeholder="Write the announcement..."
+            rows="5"
+        ></textarea>
+
+        <button class="primary" onclick="addAnnouncement()">
+            ➕ Add Announcement
+        </button>
+
+        <button onclick="showPage('adminDashboard')">
+            ⬅️ Back to Administrator Dashboard
+        </button>
+
+        <p id="announcementAdminMessage"></p>
+    </div>
+
+    <div id="adminAnnouncementsList"></div>
+
+    </section>
 
 <section id="familyMembersAdmin">
 
@@ -729,7 +766,11 @@ function showPage(pageId) {
     document.getElementById(pageId).classList.add("active");
 if (pageId === "tree") {
     loadFamilyTree();
-    }
+}
+
+if (pageId === "announcementsAdmin") {
+    loadAdminAnnouncements();
+}
     window.scrollTo({
         top: 0,
         behavior: "smooth"
@@ -1495,13 +1536,81 @@ async function loadAnnouncements() {
                 ${announcement.content
     ? `<p>${announcement.content}</p>`
     : ""}
+    <button class="primary"
+    onclick="editAnnouncement('${announcement.id}')">
+    ✏️ Edit Announcement
+</button>
             </div>
         `;
     });
 
     announcements.innerHTML = html;
 }
+async function loadAdminAnnouncements() {
 
+    const container =
+        document.getElementById("adminAnnouncementsList");
+
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="card">
+            <p>Loading announcements...</p>
+        </div>
+    `;
+
+    const { data, error } = await supabaseClient
+        .from("Announcements")
+        .select("id, title, content, created_at")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        container.innerHTML = `
+            <div class="card">
+                <h3>Unable to load announcements</h3>
+                <p>${error.message}</p>
+            </div>
+        `;
+        console.error("Admin announcement error:", error);
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        container.innerHTML = `
+            <div class="card">
+                <p>No announcements found.</p>
+            </div>
+        `;
+        return;
+    }
+
+    let html = `
+        <div class="card">
+            <h3>📢 Existing Announcements</h3>
+            <p>Family announcements currently in the database.</p>
+        </div>
+    `;
+
+    data.forEach(announcement => {
+
+        html += `
+            <div class="card">
+                <h3>📢 ${announcement.title}</h3>
+
+                ${announcement.content
+                    ? `<p>${announcement.content}</p>`
+                    : ""}
+
+                <button class="primary"
+                    onclick="editAnnouncement('${announcement.id}')">
+                    ✏️ Edit Announcement
+                </button>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+    }
 async function loadCalendar() {
 
     const calendar = document.getElementById("calendar");
