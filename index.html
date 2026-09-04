@@ -312,6 +312,26 @@ footer {
         <p id="loginMessage" class="small"></p>
     </div>
 </div>
+    <div id="resetPasswordScreen" class="login-screen" style="display: none;">
+    <div class="card login-card">
+        <h2>🔐 Set New Password</h2>
+        <p>Enter your new password below.</p>
+
+        <input type="password"
+               id="newPassword"
+               placeholder="New password">
+
+        <input type="password"
+               id="confirmPassword"
+               placeholder="Confirm new password">
+
+        <button class="primary" onclick="updatePassword()">
+            Change Password
+        </button>
+
+        <p id="resetPasswordMessage" class="small"></p>
+    </div>
+    </div>
 <header>
     <h1>Mutabazi Sabiti Family</h1>
     <p>Our roots, our strength, our legacy.</p>
@@ -949,6 +969,43 @@ loadCalendar();
 
     message.textContent =
         "Password reset instructions have been sent to your email.";
+    }
+    async function updatePassword() {
+
+    const newPassword = document.getElementById("newPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    const message = document.getElementById("resetPasswordMessage");
+
+    if (!newPassword || !confirmPassword) {
+        message.textContent = "Please enter and confirm your new password.";
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        message.textContent = "Passwords do not match.";
+        return;
+    }
+
+    if (newPassword.length < 6) {
+        message.textContent = "Password must be at least 6 characters.";
+        return;
+    }
+
+    message.textContent = "Changing password...";
+
+    const { error } = await supabaseClient.auth.updateUser({
+        password: newPassword
+    });
+
+    if (error) {
+        message.textContent = error.message;
+        return;
+    }
+
+    message.textContent = "Password changed successfully.";
+
+    document.getElementById("newPassword").value = "";
+    document.getElementById("confirmPassword").value = "";
     }
     async function checkAdminAccess() {
 
