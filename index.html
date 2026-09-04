@@ -1228,6 +1228,10 @@ async function loadBirthdays() {
     onclick="editFamilyBirthday('${birthday.id}')">
     ✏️ Edit Birthday
 </button>
+<button
+    onclick="deleteFamilyBirthday('${birthday.id}', '${birthday.member_name.replace(/'/g, "\\'")}')">
+    🗑️ Delete Birthday
+</button>
             </div>
         `;
     });
@@ -1339,6 +1343,51 @@ async function loadBirthdays() {
     document.getElementById("birthdayMemberName").value = "";
     document.getElementById("birthdayDate").value = "";
     document.getElementById("birthdayDescription").value = "";
+
+    await loadAdminBirthdays();
+    await loadBirthdays();
+    }
+    async function deleteFamilyBirthday(birthdayId, memberName) {
+
+    const confirmed = confirm(
+        "Are you sure you want to delete the birthday for " +
+        memberName +
+        "?\n\nThis action cannot be undone."
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const message = document.getElementById("birthdayAdminMessage");
+
+    if (message) {
+        message.textContent =
+            "Deleting birthday for " + memberName + "...";
+    }
+
+    const { error } = await supabaseClient
+        .from("family_birthdays")
+        .delete()
+        .eq("id", birthdayId);
+
+    if (error) {
+
+        if (message) {
+            message.textContent =
+                "Unable to delete birthday: " + error.message;
+        }
+
+        console.error(error);
+        return;
+    }
+
+    if (message) {
+        message.textContent =
+            "✅ Birthday for " +
+            memberName +
+            " was deleted successfully.";
+    }
 
     await loadAdminBirthdays();
     await loadBirthdays();
