@@ -1847,6 +1847,51 @@ async function loadAdminAnnouncements() {
     await loadAdminAnnouncements();
     await loadAnnouncements();
     }
+    async function addCalendarEvent() {
+
+    const title =
+        document.getElementById("calendarEventTitle").value.trim();
+
+    const eventDate =
+        document.getElementById("calendarEventDate").value;
+
+    const description =
+        document.getElementById("calendarEventDescription").value.trim();
+
+    const message =
+        document.getElementById("calendarAdminMessage");
+
+    if (!title || !eventDate) {
+        message.textContent =
+            "Please enter the event title and date.";
+        return;
+    }
+
+    message.textContent = "Saving calendar event...";
+
+    const { error } = await supabaseClient
+        .from("family_calendar")
+        .insert({
+            title: title,
+            event_date: eventDate,
+            description: description || null
+        });
+
+    if (error) {
+        message.textContent =
+            "Unable to add calendar event: " + error.message;
+
+        console.error("Add calendar event error:", error);
+        return;
+    }
+
+    message.textContent =
+        "✅ Calendar event added successfully.";
+
+    document.getElementById("calendarEventTitle").value = "";
+    document.getElementById("calendarEventDate").value = "";
+    document.getElementById("calendarEventDescription").value = "";
+}
 async function loadCalendar() {
 
     const calendar = document.getElementById("calendar");
