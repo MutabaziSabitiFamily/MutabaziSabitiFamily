@@ -1797,7 +1797,7 @@ async function loadAdminAnnouncements() {
 
     const { data, error } = await supabaseClient
         .from("Announcements")
-        .select("id, title, content, created_at")
+        .select("id, title, content, created_at, image_url")
         .order("created_at", { ascending: false });
 
     if (error) {
