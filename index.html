@@ -928,8 +928,7 @@ async function loginUser() {
             email: email,
             password: password
         });
-message.textContent = "LOGIN SUCCESSFUL";
-    alert("STEP 1 COMPLETE");
+document.getElementById("loginScreen").style.display = "none";
     if (error) {
         message.textContent = error.message;
         return;
