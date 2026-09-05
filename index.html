@@ -1007,6 +1007,16 @@ loadCalendar();
     document.getElementById("newPassword").value = "";
     document.getElementById("confirmPassword").value = "";
     }
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+
+    if (event === "PASSWORD_RECOVERY") {
+
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("resetPasswordScreen").style.display = "block";
+
+    }
+
+});
     async function checkAdminAccess() {
 
     const { data, error } = await supabaseClient.auth.getUser();
