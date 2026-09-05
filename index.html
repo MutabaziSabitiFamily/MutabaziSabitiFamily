@@ -3011,21 +3011,27 @@ async function loadFamilyBook() {
     data.forEach(section => {
 
         html += `
-            <div class="card">
+    <div class="card">
 
-                ${section.chapter_number
-                    ? `<h2>Chapter ${section.chapter_number}</h2>`
-                    : ""}
+        ${section.chapter_number
+            ? `<h2>Chapter ${section.chapter_number}</h2>`
+            : ""}
 
-                ${section.title
-                    ? `<h3>${section.title}</h3>`
-                    : ""}
+        ${section.title
+            ? `<h3>${section.title}</h3>`
+            : ""}
 
-                ${section.content
-                    ? `<div>${section.content}</div>`
-                    : ""}
+        ${section.content
+            ? `<div>${section.content}</div>`
+            : ""}
 
-            </div>
+        <button class="primary"
+            onclick="editFamilyBook(${section.id})">
+            ✏️ Edit
+        </button>
+
+    </div>
+`;
         `;
     });
 
