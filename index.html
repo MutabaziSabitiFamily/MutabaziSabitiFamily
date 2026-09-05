@@ -3378,11 +3378,25 @@ saveButton.setAttribute("onclick", "addFamilyMember()");
 await loadFamilyMembers();
 await loadAdminFamilyMembers();
     }
-loadFamilyMembers();
-loadFamilyGallery();
-loadBirthdays();
-loadAnnouncements();
-loadFamilyBook();
+    async function checkExistingSession() {
+
+    const { data, error } = await supabaseClient.auth.getSession();
+
+    if (error || !data.session) {
+        return;
+    }
+
+    document.getElementById("loginScreen").style.display = "none";
+
+    loadFamilyMembers();
+    loadFamilyGallery();
+    loadBirthdays();
+    loadAnnouncements();
+    loadFamilyBook();
+
+    checkAdminAccess();
+    }
+checkExistingSession();
 
 function openAdminDashboard() {
 
