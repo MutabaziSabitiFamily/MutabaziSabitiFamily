@@ -1869,6 +1869,11 @@ async function loadAdminAnnouncements() {
 
     const content =
         document.getElementById("announcementContent").value.trim();
+        const imageInput =
+    document.getElementById("announcementImage");
+
+const imageFile =
+    imageInput.files.length ? imageInput.files[0] : null;
 
     const message =
         document.getElementById("announcementAdminMessage");
@@ -1880,13 +1885,45 @@ async function loadAdminAnnouncements() {
     }
 
     message.textContent = "Saving announcement...";
+        let imageUrl = null;
+
+if (imageFile) {
+
+    const fileName =
+        Date.now() + "_" + imageFile.name.replace(/\s+/g, "_");
+
+    const filePath =
+        "announcements/" + fileName;
+
+    const { error: uploadError } =
+        await supabaseClient.storage
+            .from("family_photos")
+            .upload(filePath, imageFile);
+
+    if (uploadError) {
+        message.textContent =
+            "Unable to upload announcement image: " +
+            uploadError.message;
+
+        console.error("Announcement image upload error:", uploadError);
+        return;
+    }
+
+    const { data: publicUrlData } =
+        supabaseClient.storage
+            .from("family_photos")
+            .getPublicUrl(filePath);
+
+    imageUrl = publicUrlData.publicUrl;
+}
 
     const { error } = await supabaseClient
         .from("Announcements")
         .insert({
-            title: title,
-            content: content
-        });
+    title: title,
+    content: content,
+    image_url: imageUrl
+});
 
     if (error) {
         message.textContent =
@@ -1901,6 +1938,7 @@ async function loadAdminAnnouncements() {
 
     document.getElementById("announcementTitle").value = "";
     document.getElementById("announcementContent").value = "";
+        document.getElementById("announcementImage").value = "";
 
     await loadAdminAnnouncements();
     await loadAnnouncements();
