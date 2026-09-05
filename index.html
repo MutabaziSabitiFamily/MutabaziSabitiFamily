@@ -928,7 +928,8 @@ async function loginUser() {
             email: email,
             password: password
         });
-alert(error ? error.message : "LOGIN SUCCESSFUL");
+message.textContent = "LOGIN SUCCESSFUL";
+    alert("STEP 1 COMPLETE");
     if (error) {
         message.textContent = error.message;
         return;
