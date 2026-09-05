@@ -921,14 +921,14 @@ async function loginUser() {
         return;
     }
 
-    alert("LOGIN FUNCTION IS RUNNING");
+    message.textContent = "Signing in...";
 
     const { data, error } =
         await supabaseClient.auth.signInWithPassword({
             email: email,
             password: password
         });
-
+alert(error ? error.message : "LOGIN SUCCESSFUL");
     if (error) {
         message.textContent = error.message;
         return;
