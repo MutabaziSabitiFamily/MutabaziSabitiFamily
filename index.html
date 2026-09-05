@@ -1260,12 +1260,39 @@ status: "living"
                 ${photo.event_date
                     ? `<p><strong>Date:</strong> ${photo.event_date}</p>`
                     : ""}
+                    <button onclick="deleteGalleryPhoto(${photo.id})"
+        style="margin-top:10px;">
+    🗑️ Delete Photo
+</button>
             </div>
         `;
     });
 
     gallery.innerHTML = html;
 }         
+    async function deleteGalleryPhoto(id) {
+
+    const confirmed = confirm(
+        "Are you sure you want to delete this family photo?"
+    );
+
+    if (!confirmed) return;
+
+    const { error } = await supabaseClient
+        .from("family_gallery")
+        .delete()
+        .eq("id", id);
+
+    if (error) {
+        alert("Failed to delete photo: " + error.message);
+        console.error("Delete gallery error:", error);
+        return;
+    }
+
+    alert("Photo deleted successfully.");
+
+    loadFamilyGallery();
+    }
     
     function displayMembers(members) {
 
