@@ -3764,6 +3764,11 @@ async function loadFamilyMessages() {
 
         return `
             <div class="card">
+
+                <h3 style="margin-bottom:8px;">
+                    💌 ${item.author_name || "Family Member"}
+                </h3>
+
                 <p style="font-size:17px;">
                     ${item.message}
                 </p>
@@ -3771,11 +3776,12 @@ async function loadFamilyMessages() {
                 <p class="small">
                     📅 ${date.toLocaleString()}
                 </p>
+
             </div>
         `;
 
     }).join("");
-    }
+}
 </script>
 </body>
 </html>
