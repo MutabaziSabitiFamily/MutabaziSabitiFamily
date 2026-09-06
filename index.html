@@ -3787,9 +3787,9 @@ async function loadFamilyMessages() {
                     <div style="margin-top:12px;">
 
                         <button
-                            onclick="editFamilyMessage(${item.id}, ${JSON.stringify(item.message)})">
-                            ✏️ Edit
-                        </button>
+    onclick="editFamilyMessage(${item.id})">
+    ✏️ Edit
+</button>
 
                         <button
                             onclick="deleteFamilyMessage(${item.id})">
@@ -3804,11 +3804,23 @@ async function loadFamilyMessages() {
 
     }).join("");
 }
-    async function editFamilyMessage(id, oldMessage) {
+    async function editFamilyMessage(id) {
+
+    const { data, error } = await supabaseClient
+        .from("family_messages")
+        .select("message")
+        .eq("id", id)
+        .single();
+
+    if (error) {
+        alert("Unable to load message: " + error.message);
+        console.error(error);
+        return;
+    }
 
     const newMessage = prompt(
         "Edit your family message:",
-        oldMessage
+        data.message
     );
 
     if (newMessage === null) {
@@ -3822,23 +3834,23 @@ async function loadFamilyMessages() {
         return;
     }
 
-    const { error } = await supabaseClient
+    const { error: updateError } = await supabaseClient
         .from("family_messages")
         .update({
             message: message
         })
         .eq("id", id);
 
-    if (error) {
-        alert("Unable to edit message: " + error.message);
-        console.error(error);
+    if (updateError) {
+        alert("Unable to edit message: " + updateError.message);
+        console.error(updateError);
         return;
     }
 
     alert("Message updated successfully. ❤️");
 
     loadFamilyMessages();
-    }
+}
     async function deleteFamilyMessage(id) {
 
     const confirmed = confirm(
