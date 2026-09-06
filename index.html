@@ -970,21 +970,22 @@ async function loginUser() {
             email: email,
             password: password
         });
-document.getElementById("loginScreen").style.display = "none";
+
     if (error) {
         message.textContent = error.message;
         return;
     }
 
+    // Login was successful
+    message.textContent = "Login successful.";
+
     document.getElementById("loginScreen").style.display = "none";
 
-document.getElementById("loginScreen").style.display = "none";
-
-loadFamilyMembers();
-loadAnnouncements();
-loadCalendar();
+    loadFamilyMembers();
+    loadAnnouncements();
+    loadCalendar();
     checkAdminAccess();
-    }
+}
     async function forgotPassword() {
 
     const email = document.getElementById("loginEmail").value.trim();
