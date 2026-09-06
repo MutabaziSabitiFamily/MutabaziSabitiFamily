@@ -952,6 +952,30 @@ const supabaseClient = supabase.createClient(
     SUPABASE_KEY
 );
 
+    async function checkUserSession() {
+
+    const { data: { session } } =
+        await supabaseClient.auth.getSession();
+
+    if (session) {
+
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("portalContent").style.display = "block";
+        document.getElementById("portalFooter").style.display = "block";
+
+        loadFamilyMembers();
+        loadAnnouncements();
+        loadCalendar();
+        checkAdminAccess();
+
+    } else {
+
+        document.getElementById("loginScreen").style.display = "flex";
+        document.getElementById("portalContent").style.display = "none";
+        document.getElementById("portalFooter").style.display = "none";
+    }
+    }
+    checkUserSession();
 async function loginUser() {
 
     const email = document.getElementById("loginEmail").value.trim();
