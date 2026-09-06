@@ -382,6 +382,7 @@ header p {
     <button onclick="showPage('announcements')">📢 News</button>
     <button onclick="showPage('calendar')">📅 Calendar</button>
     <button onclick="showPage('book')">📖 Family Book</button>
+    <button onclick="logoutUser()">🚪 Logout</button>
 </nav>
 
 <main id="portalContent" style="display: none;">
@@ -3611,6 +3612,23 @@ async function addGalleryPhoto() {
     document.getElementById("galleryPhotoTitle").value = "";
     document.getElementById("galleryPhotoDescription").value = "";
     document.getElementById("galleryPhotoFile").value = "";
+    }
+    async function logoutUser() {
+
+    const { error } = await supabaseClient.auth.signOut();
+
+    if (error) {
+        alert("Logout failed: " + error.message);
+        return;
+    }
+
+    document.getElementById("loginScreen").style.display = "flex";
+    document.getElementById("portalContent").style.display = "none";
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
     }
 </script>
 </body>
