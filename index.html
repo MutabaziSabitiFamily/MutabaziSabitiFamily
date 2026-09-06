@@ -954,6 +954,9 @@ function showPage(pageId) {
 if (pageId === "tree") {
     loadFamilyTree();
 }
+    if (pageId === "messages") {
+    loadFamilyMessages();
+    }
 
 if (pageId === "announcementsAdmin") {
     loadAdminAnnouncements();
@@ -3657,6 +3660,102 @@ async function addGalleryPhoto() {
         top: 0,
         behavior: "smooth"
     });
+    }
+    async function postFamilyMessage() {
+
+    const messageBox = document.getElementById("familyMessage");
+    const status = document.getElementById("messageStatus");
+
+    const message = messageBox.value.trim();
+
+    if (!message) {
+        status.textContent = "Please write a message first.";
+        return;
+    }
+
+    status.textContent = "Posting message...";
+
+    const { data: { user } } =
+        await supabaseClient.auth.getUser();
+
+    if (!user) {
+        status.textContent = "Please sign in first.";
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from("family_messages")
+        .insert({
+            user_id: user.id,
+            message: message
+        });
+
+    if (error) {
+        status.textContent = error.message;
+        return;
+    }
+
+    messageBox.value = "";
+    status.textContent = "Message posted successfully. ❤️";
+
+    loadFamilyMessages();
+}
+
+
+async function loadFamilyMessages() {
+
+    const list = document.getElementById("familyMessagesList");
+
+    if (!list) return;
+
+    list.innerHTML = `
+        <div class="card">
+            <p>Loading family messages...</p>
+        </div>
+    `;
+
+    const { data, error } = await supabaseClient
+        .from("family_messages")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        list.innerHTML = `
+            <div class="card">
+                <p>Unable to load messages.</p>
+            </div>
+        `;
+        console.error(error);
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        list.innerHTML = `
+            <div class="card">
+                <h3>💌 No messages yet</h3>
+                <p>Be the first family member to leave a message.</p>
+            </div>
+        `;
+        return;
+    }
+
+    list.innerHTML = data.map(function(item) {
+
+        const date = new Date(item.created_at);
+
+        return `
+            <div class="card">
+                <p style="font-size:17px;">
+                    ${item.message}
+                </p>
+
+                <p class="small">
+                    📅 ${date.toLocaleString()}
+                </p>
+            </div>
+        `;
+
+    }).join("");
     }
 </script>
 </body>
