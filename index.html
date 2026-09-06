@@ -3696,9 +3696,8 @@ async function addGalleryPhoto() {
     }
 
     const authorName =
-        member?.display_name ||
-        `${member?.first_name || ""} ${member?.surname || ""}`.trim() ||
-        user.email;
+    member?.display_name ||
+    "Rogers Mbabazi";
 
     // Save the message and member's name
     const { error } = await supabaseClient
