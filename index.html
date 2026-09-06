@@ -905,6 +905,33 @@ header p {
         </p>
     </div>
 </section>
+    <section id="messages">
+
+    <div class="card">
+        <h2>💌 Family Messages</h2>
+
+        <p>
+            Leave a message, greeting, memory, encouragement,
+            or special thought for the Mutabazi Sabiti Family.
+        </p>
+
+        <textarea id="familyMessage"
+                  placeholder="Write your message here..."
+                  rows="5"
+                  style="width:100%; padding:12px; border:1px solid #ccc; border-radius:10px; resize:vertical;">
+        </textarea>
+
+        <button class="primary"
+                onclick="postFamilyMessage()">
+            💌 Post Message
+        </button>
+
+        <p id="messageStatus" class="small"></p>
+    </div>
+
+    <div id="familyMessagesList"></div>
+
+    </section>
 
 </main>
 
