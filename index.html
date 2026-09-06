@@ -384,7 +384,7 @@ header p {
     <button onclick="showPage('book')">📖 Family Book</button>
 </nav>
 
-<main>
+<main id="portalContent" style="display: none;">
 
 <section id="home" class="active">
 
@@ -906,7 +906,7 @@ header p {
 
 </main>
 
-<footer>
+<footer id="portalFooter" style="display: none;">
     Mutabazi Sabiti Family<br>
     Our roots, our strength, our legacy.
 </footer>
@@ -980,11 +980,13 @@ async function loginUser() {
     message.textContent = "Login successful.";
 
     document.getElementById("loginScreen").style.display = "none";
+document.getElementById("portalContent").style.display = "block";
+document.getElementById("portalFooter").style.display = "block";
 
-    loadFamilyMembers();
-    loadAnnouncements();
-    loadCalendar();
-    checkAdminAccess();
+loadFamilyMembers();
+loadAnnouncements();
+loadCalendar();
+checkAdminAccess();
 }
     async function forgotPassword() {
 
