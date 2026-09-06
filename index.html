@@ -280,16 +280,39 @@ footer {
     margin-bottom: 8px;
 }
 
-.tree-avatar {
-    font-size: 50px;
-    margin-bottom: 8px;
-    }
-    .family-logo {
-    width: 110px;
-    height: 110px;
+.family-logo {
+    width: 95px;
+    height: 95px;
     object-fit: contain;
-    display: block;
-    margin: 0 auto 10px auto;
+    border-radius: 50%;
+    background: white;
+    padding: 5px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    flex-shrink: 0;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 25px 20px;
+    background: linear-gradient(135deg, #1b5e20, #2e7d32, #66bb6a);
+    color: white;
+    text-align: left;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+header p {
+    margin: 6px 0 0;
+    font-size: 16px;
+    opacity: 0.95;
     }
 </style>
 </head>
@@ -344,8 +367,10 @@ footer {
          alt="Mutabazi Sabiti Family Logo"
          class="family-logo">
 
-    <h1>Mutabazi Sabiti Family</h1>
-    <p>Our roots, our strength, our legacy.</p>
+    <div>
+        <h1>Mutabazi Sabiti Family</h1>
+        <p>Our roots, our strength, our legacy.</p>
+    </div>
 </header>
 
 <nav>
