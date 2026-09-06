@@ -3683,10 +3683,29 @@ async function addGalleryPhoto() {
         return;
     }
 
+    // Find the logged-in family member
+    const { data: member, error: memberError } =
+        await supabaseClient
+            .from("family_members")
+            .select("display_name, first_name, surname")
+            .eq("email", user.email)
+            .maybeSingle();
+
+    if (memberError) {
+        console.error(memberError);
+    }
+
+    const authorName =
+        member?.display_name ||
+        `${member?.first_name || ""} ${member?.surname || ""}`.trim() ||
+        user.email;
+
+    // Save the message and member's name
     const { error } = await supabaseClient
         .from("family_messages")
         .insert({
             user_id: user.id,
+            author_name: authorName,
             message: message
         });
 
