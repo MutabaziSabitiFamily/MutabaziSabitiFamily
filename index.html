@@ -4218,15 +4218,56 @@ async function loadFamilyMessages() {
                 }
 
                 ${
-                    date
-                    ? `<p class="small">📅 ${date}</p>`
-                    : ""
-                }
+    date
+    ? `<p class="small">📅 ${date}</p>`
+    : ""
+}
 
-            </div>
+<button
+    onclick="deleteFamilyAchievement(${item.id})"
+    style="margin-top:10px;"
+>
+    🗑️ Delete
+</button>
+
+</div>
         `;
 
     }).join("");
+    }
+    async function deleteFamilyAchievement(id) {
+
+    const confirmed = confirm(
+        "Are you sure you want to delete this achievement?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const { data: { user } } =
+        await supabaseClient.auth.getUser();
+
+    if (!user || user.email !== "mutabazimbabazi@gmail.com") {
+        alert("You are not authorized to delete achievements.");
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from("family_achievements")
+        .delete()
+        .eq("id", id);
+
+    if (error) {
+        alert("Unable to delete achievement: " + error.message);
+        console.error(error);
+        return;
+    }
+
+    alert("Achievement deleted successfully. 🗑️");
+
+    loadAdminAchievements();
+    loadFamilyAchievements();
     }
 </script>
 </body>
