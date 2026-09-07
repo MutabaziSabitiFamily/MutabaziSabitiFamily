@@ -517,6 +517,73 @@ header p {
     </div>
 
 </section>
+    <section id="achievementsAdmin">
+
+    <div class="card">
+
+        <h2>🏆 Manage Family Achievements</h2>
+
+        <p>
+            Add important achievements and milestones
+            of Mutabazi Sabiti Family members.
+        </p>
+
+        <input
+            type="text"
+            id="achievementTitle"
+            placeholder="Achievement title"
+            style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ccc; border-radius:10px;"
+        >
+
+        <input
+            type="text"
+            id="achievementMember"
+            placeholder="Family member name"
+            style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ccc; border-radius:10px;"
+        >
+
+        <select
+            id="achievementCategory"
+            style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ccc; border-radius:10px;"
+        >
+            <option value="">Select category</option>
+            <option value="Education">🎓 Education</option>
+            <option value="Career">💼 Career</option>
+            <option value="Award">🏅 Award & Recognition</option>
+            <option value="Family Milestone">💍 Family Milestone</option>
+            <option value="Birth">👶 New Family Member</option>
+            <option value="Business">🏢 Business</option>
+            <option value="Community">🤝 Community Service</option>
+            <option value="Other">⭐ Other</option>
+        </select>
+
+        <input
+            type="date"
+            id="achievementDate"
+            style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ccc; border-radius:10px;"
+        >
+
+        <textarea
+            id="achievementDescription"
+            placeholder="Describe the achievement..."
+            rows="5"
+            style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ccc; border-radius:10px; resize:vertical;"
+        ></textarea>
+
+        <button
+            class="primary"
+            onclick="addFamilyAchievement()"
+        >
+            🏆 Add Achievement
+        </button>
+
+        <p id="achievementAdminStatus" class="small"></p>
+
+    </div>
+
+    <div id="adminAchievementsList"></div>
+
+    </section>
     <section id="announcementsAdmin">
 
     <div class="card">
