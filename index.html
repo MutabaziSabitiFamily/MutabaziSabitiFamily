@@ -1101,7 +1101,7 @@ const supabaseClient = supabase.createClient(
     SUPABASE_KEY
 );
 
-    async function checkUserSession() {
+    checkUserSession();
 
     const { data: { session } } =
         await supabaseClient.auth.getSession();
@@ -1124,7 +1124,7 @@ const supabaseClient = supabase.createClient(
         document.getElementById("portalFooter").style.display = "none";
     }
     }
-    checkUserSession();
+    
 async function loginUser() {
 
     const email = document.getElementById("loginEmail").value.trim();
