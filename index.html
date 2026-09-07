@@ -1050,16 +1050,7 @@ header p {
 
 <script>
 
-let previousPage = "home";
-
 function showPage(pageId) {
-
-    const currentSection =
-        document.querySelector("section.active");
-
-    if (currentSection && currentSection.id !== pageId) {
-        previousPage = currentSection.id;
-    }
 
     const sections = document.querySelectorAll("section");
 
@@ -1067,11 +1058,7 @@ function showPage(pageId) {
         section.classList.remove("active");
     });
 
-    const targetPage = document.getElementById(pageId);
-
-    if (!targetPage) return;
-
-    targetPage.classList.add("active");
+    document.getElementById(pageId).classList.add("active");
 
     if (pageId === "tree") {
         loadFamilyTree();
@@ -1092,22 +1079,12 @@ function showPage(pageId) {
     if (pageId === "announcementsAdmin") {
         loadAdminAnnouncements();
     }
-const backButton = document.getElementById("globalBackButton");
 
-if (backButton) {
-    backButton.style.display =
-        pageId === "home" ? "none" : "inline-block";
-    }
     window.scrollTo({
         top: 0,
         behavior: "smooth"
     });
 }
-    function goBack() {
-
-    showPage(previousPage || "home");
-
-    }
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
