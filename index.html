@@ -1050,7 +1050,16 @@ header p {
 
 <script>
 
+let previousPage = "home";
+
 function showPage(pageId) {
+
+    const currentSection =
+        document.querySelector("section.active");
+
+    if (currentSection && currentSection.id !== pageId) {
+        previousPage = currentSection.id;
+    }
 
     const sections = document.querySelectorAll("section");
 
@@ -1058,29 +1067,42 @@ function showPage(pageId) {
         section.classList.remove("active");
     });
 
-    document.getElementById(pageId).classList.add("active");
-if (pageId === "tree") {
-    loadFamilyTree();
-}
+    const targetPage = document.getElementById(pageId);
+
+    if (!targetPage) return;
+
+    targetPage.classList.add("active");
+
+    if (pageId === "tree") {
+        loadFamilyTree();
+    }
+
     if (pageId === "messages") {
-    loadFamilyMessages();
+        loadFamilyMessages();
     }
-if (pageId === "achievements") {
-    loadFamilyAchievements();
-}
+
+    if (pageId === "achievements") {
+        loadFamilyAchievements();
+    }
+
     if (pageId === "achievementsAdmin") {
-    loadAdminAchievements();
+        loadAdminAchievements();
     }
-if (pageId === "announcementsAdmin") {
-    loadAdminAnnouncements();
-}
+
+    if (pageId === "announcementsAdmin") {
+        loadAdminAnnouncements();
+    }
+
     window.scrollTo({
         top: 0,
         behavior: "smooth"
     });
 }
+    function goBack() {
 
-</script>
+    showPage(previousPage || "home");
+
+    }
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
