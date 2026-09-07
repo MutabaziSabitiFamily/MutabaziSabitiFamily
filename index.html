@@ -4224,15 +4224,16 @@ async function loadFamilyMessages() {
 }
 
 <button
-    onclick="deleteFamilyAchievement(${item.id})"
-    style="margin-top:10px;"
->
-<button
     onclick="editFamilyAchievement(${item.id})"
     style="margin-top:10px;"
 >
     ✏️ Edit
 </button>
+
+<button
+    onclick="deleteFamilyAchievement(${item.id})"
+    style="margin-top:10px;"
+>
     🗑️ Delete
 </button>
 
