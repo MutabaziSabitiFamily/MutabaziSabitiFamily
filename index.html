@@ -4227,6 +4227,12 @@ async function loadFamilyMessages() {
     onclick="deleteFamilyAchievement(${item.id})"
     style="margin-top:10px;"
 >
+<button
+    onclick="editFamilyAchievement(${item.id})"
+    style="margin-top:10px;"
+>
+    ✏️ Edit
+</button>
     🗑️ Delete
 </button>
 
@@ -4265,6 +4271,69 @@ async function loadFamilyMessages() {
     }
 
     alert("Achievement deleted successfully. 🗑️");
+
+    loadAdminAchievements();
+    loadFamilyAchievements();
+    }
+    async function editFamilyAchievement(id) {
+
+    const { data, error } = await supabaseClient
+        .from("family_achievements")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+    if (error) {
+        alert("Unable to load achievement: " + error.message);
+        console.error(error);
+        return;
+    }
+
+    const title = prompt(
+        "Edit achievement title:",
+        data.title || ""
+    );
+
+    if (title === null) return;
+
+    const member = prompt(
+        "Edit family member name:",
+        data.member_name || ""
+    );
+
+    if (member === null) return;
+
+    const description = prompt(
+        "Edit achievement description:",
+        data.description || ""
+    );
+
+    if (description === null) return;
+
+    const { data: { user } } =
+        await supabaseClient.auth.getUser();
+
+    if (!user || user.email !== "mutabazimbabazi@gmail.com") {
+        alert("You are not authorized to edit achievements.");
+        return;
+    }
+
+    const { error: updateError } = await supabaseClient
+        .from("family_achievements")
+        .update({
+            title: title.trim(),
+            member_name: member.trim() || null,
+            description: description.trim() || null
+        })
+        .eq("id", id);
+
+    if (updateError) {
+        alert("Unable to update achievement: " + updateError.message);
+        console.error(updateError);
+        return;
+    }
+
+    alert("Achievement updated successfully. ✏️");
 
     loadAdminAchievements();
     loadFamilyAchievements();
