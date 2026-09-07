@@ -1049,11 +1049,16 @@ header p {
 </footer>
 
 <script>
-
+let previousPage = "home";
 function showPage(pageId) {
 
-    const sections = document.querySelectorAll("section");
+    const currentSection = document.querySelector("section.active");
 
+    if (currentSection && currentSection.id !== pageId) {
+        previousPage = currentSection.id;
+    }
+
+    const sections = document.querySelectorAll("section");
     sections.forEach(function(section) {
         section.classList.remove("active");
     });
