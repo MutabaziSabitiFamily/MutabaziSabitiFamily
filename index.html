@@ -388,7 +388,13 @@ header p {
 </nav>
 
 <main id="portalContent" style="display: none;">
-
+<button
+    id="globalBackButton"
+    onclick="goBack()"
+    style="display:none; margin:15px 0;"
+>
+    ← Back
+</button>
 <section id="home" class="active">
 
 <div class="card">
@@ -1092,7 +1098,12 @@ function showPage(pageId) {
     if (pageId === "announcementsAdmin") {
         loadAdminAnnouncements();
     }
+const backButton = document.getElementById("globalBackButton");
 
+if (backButton) {
+    backButton.style.display =
+        pageId === "home" ? "none" : "inline-block";
+    }
     window.scrollTo({
         top: 0,
         behavior: "smooth"
