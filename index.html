@@ -4091,6 +4091,140 @@ async function loadFamilyMessages() {
 
     }).join("");
         }
+    async function addFamilyAchievement() {
+
+    const title = document.getElementById("achievementTitle").value.trim();
+    const member = document.getElementById("achievementMember").value.trim();
+    const category = document.getElementById("achievementCategory").value;
+    const date = document.getElementById("achievementDate").value;
+    const description = document.getElementById("achievementDescription").value.trim();
+    const status = document.getElementById("achievementAdminStatus");
+
+    if (!title) {
+        status.textContent = "Please enter an achievement title.";
+        return;
+    }
+
+    status.textContent = "Adding achievement...";
+
+    const { data: { user } } =
+        await supabaseClient.auth.getUser();
+
+    if (!user || user.email !== "mutabazimbabazi@gmail.com") {
+        status.textContent = "You are not authorized to add achievements.";
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from("family_achievements")
+        .insert({
+            title: title,
+            member_name: member || null,
+            category: category || null,
+            achievement_date: date || null,
+            description: description || null
+        });
+
+    if (error) {
+        status.textContent = "Unable to add achievement.";
+        console.error(error);
+        alert("Error: " + error.message);
+        return;
+    }
+
+    status.textContent = "Achievement added successfully! 🏆";
+
+    document.getElementById("achievementTitle").value = "";
+    document.getElementById("achievementMember").value = "";
+    document.getElementById("achievementCategory").value = "";
+    document.getElementById("achievementDate").value = "";
+    document.getElementById("achievementDescription").value = "";
+
+    loadAdminAchievements();
+    loadFamilyAchievements();
+    }
+    async function loadAdminAchievements() {
+
+    const list = document.getElementById("adminAchievementsList");
+
+    if (!list) return;
+
+    list.innerHTML = `
+        <div class="card">
+            <p>Loading achievements...</p>
+        </div>
+    `;
+
+    const { data, error } = await supabaseClient
+        .from("family_achievements")
+        .select("*")
+        .order("achievement_date", { ascending: false });
+
+    if (error) {
+
+        list.innerHTML = `
+            <div class="card">
+                <p>Unable to load achievements.</p>
+            </div>
+        `;
+
+        console.error(error);
+        return;
+    }
+
+    if (!data || data.length === 0) {
+
+        list.innerHTML = `
+            <div class="card">
+                <p>No achievements have been added yet.</p>
+            </div>
+        `;
+
+        return;
+    }
+
+    list.innerHTML = data.map(function(item) {
+
+        const date = item.achievement_date
+            ? new Date(item.achievement_date).toLocaleDateString()
+            : "";
+
+        return `
+            <div class="card">
+
+                <h3>
+                    🏆 ${escapeHtml(item.title)}
+                </h3>
+
+                ${
+                    item.member_name
+                    ? `<p>👤 <strong>${escapeHtml(item.member_name)}</strong></p>`
+                    : ""
+                }
+
+                ${
+                    item.category
+                    ? `<p>📌 ${escapeHtml(item.category)}</p>`
+                    : ""
+                }
+
+                ${
+                    item.description
+                    ? `<p>${escapeHtml(item.description)}</p>`
+                    : ""
+                }
+
+                ${
+                    date
+                    ? `<p class="small">📅 ${date}</p>`
+                    : ""
+                }
+
+            </div>
+        `;
+
+    }).join("");
+    }
 </script>
 </body>
 </html>
