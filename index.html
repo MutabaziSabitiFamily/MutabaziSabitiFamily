@@ -1091,7 +1091,12 @@ function showPage(pageId) {
     if (pageId === "announcementsAdmin") {
         loadAdminAnnouncements();
     }
+const backButton = document.getElementById("globalBackButton");
 
+if (backButton) {
+    backButton.style.display =
+        pageId === "home" ? "none" : "inline-block";
+}
         window.scrollTo({
         top: 0,
         behavior: "smooth"
