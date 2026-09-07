@@ -383,6 +383,7 @@ header p {
     <button onclick="showPage('calendar')">📅 Calendar</button>
     <button onclick="showPage('book')">📖 Family Book</button>
     <button onclick="showPage('messages')">💌 Family Messages</button>
+    <button onclick="showPage('achievements')">🏆 Achievements</button>
     <button onclick="logoutUser()">🚪 Logout</button>
 </nav>
 
@@ -932,6 +933,34 @@ header p {
     <div id="familyMessagesList"></div>
 
     </section>
+    <section id="achievements">
+
+    <div class="card">
+        <h2>🏆 Family Achievements & Milestones</h2>
+
+        <p>
+            Celebrate and preserve the achievements, milestones
+            and memorable accomplishments of the Mutabazi Sabiti Family.
+        </p>
+
+        <input
+            type="search"
+            id="achievementSearch"
+            placeholder="🔎 Search achievements..."
+            oninput="filterAchievements()"
+            style="width:100%; padding:12px; border:1px solid #ccc; border-radius:10px;"
+        >
+    </div>
+
+    <div id="achievementsList">
+
+        <div class="card">
+            <p>Loading family achievements...</p>
+        </div>
+
+    </div>
+
+    </section>
 
 </main>
 
@@ -957,7 +986,9 @@ if (pageId === "tree") {
     if (pageId === "messages") {
     loadFamilyMessages();
     }
-
+if (pageId === "achievements") {
+    loadFamilyAchievements();
+}
 if (pageId === "announcementsAdmin") {
     loadAdminAnnouncements();
 }
@@ -3883,6 +3914,104 @@ async function loadFamilyMessages() {
 
     loadFamilyMessages();
             }
+    async function loadFamilyAchievements() {
+
+    const list = document.getElementById("achievementsList");
+
+    if (!list) return;
+
+    list.innerHTML = `
+        <div class="card">
+            <p>Loading family achievements...</p>
+        </div>
+    `;
+
+    const { data, error } = await supabaseClient
+        .from("family_achievements")
+        .select("*")
+        .order("achievement_date", { ascending: false });
+
+    if (error) {
+
+        list.innerHTML = `
+            <div class="card">
+                <p>Unable to load achievements.</p>
+            </div>
+        `;
+
+        console.error(error);
+        return;
+    }
+
+    if (!data || data.length === 0) {
+
+        list.innerHTML = `
+            <div class="card">
+                <h3>🏆 No achievements yet</h3>
+                <p>
+                    Family achievements and milestones
+                    will appear here.
+                </p>
+            </div>
+        `;
+
+        return;
+    }
+
+    list.innerHTML = data.map(function(item) {
+
+        const date = item.achievement_date
+            ? new Date(item.achievement_date).toLocaleDateString()
+            : "";
+
+        return `
+            <div class="card achievement-card">
+
+                <h2>
+                    🏆 ${escapeHtml(item.title)}
+                </h2>
+
+                ${
+                    item.member_name
+                    ? `<p><strong>👤 ${escapeHtml(item.member_name)}</strong></p>`
+                    : ""
+                }
+
+                ${
+                    item.category
+                    ? `<p>📌 ${escapeHtml(item.category)}</p>`
+                    : ""
+                }
+
+                ${
+                    item.description
+                    ? `<p>${escapeHtml(item.description)}</p>`
+                    : ""
+                }
+
+                ${
+                    date
+                    ? `<p class="small">📅 ${date}</p>`
+                    : ""
+                }
+
+                ${
+                    item.photo_url
+                    ? `
+                        <img
+                            src="${escapeHtml(item.photo_url)}"
+                            alt="${escapeHtml(item.title)}"
+                            style="width:100%; max-width:500px; border-radius:12px; margin-top:10px;"
+                        >
+                    `
+                    : ""
+                }
+
+            </div>
+        `;
+
+    }).join("");
+        }
 </script>
 </body>
 </html>
