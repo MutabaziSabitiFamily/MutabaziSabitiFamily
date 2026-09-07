@@ -1125,7 +1125,9 @@ const supabaseClient = supabase.createClient(
     }
 }
 
-checkUserSession();
+window.addEventListener("load", function () {
+    checkUserSession();
+});
 
 async function loginUser() {
 
