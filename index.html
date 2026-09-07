@@ -1138,28 +1138,41 @@ async function loginUser() {
 
     message.textContent = "Signing in...";
 
-    const { data, error } =
-        await supabaseClient.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
+    try {
 
-    if (error) {
-        message.textContent = error.message;
-        return;
+        const { data, error } =
+            await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+
+        if (error) {
+            message.textContent = "Login error: " + error.message;
+            return;
+        }
+
+        if (!data || !data.session) {
+            message.textContent = "Login failed: No session was created.";
+            return;
+        }
+
+        message.textContent = "Login successful.";
+
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("portalContent").style.display = "block";
+        document.getElementById("portalFooter").style.display = "block";
+
+        loadFamilyMembers();
+        loadAnnouncements();
+        loadCalendar();
+        checkAdminAccess();
+
+    } catch (error) {
+
+        message.textContent = "Login error: " + error.message;
+        console.error(error);
+
     }
-
-    // Login was successful
-    message.textContent = "Login successful.";
-
-    document.getElementById("loginScreen").style.display = "none";
-document.getElementById("portalContent").style.display = "block";
-document.getElementById("portalFooter").style.display = "block";
-
-loadFamilyMembers();
-loadAnnouncements();
-loadCalendar();
-checkAdminAccess();
 }
     async function forgotPassword() {
 
