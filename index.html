@@ -1301,6 +1301,17 @@ showSignedInUser();
 
     }
 }
+    function showSignupScreen() {
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("resetPasswordScreen").style.display = "none";
+    document.getElementById("signupScreen").style.display = "block";
+}
+
+function showLoginScreen() {
+    document.getElementById("signupScreen").style.display = "none";
+    document.getElementById("resetPasswordScreen").style.display = "none";
+    document.getElementById("loginScreen").style.display = "block";
+}
     async function forgotPassword() {
 
     const email = document.getElementById("loginEmail").value.trim();
