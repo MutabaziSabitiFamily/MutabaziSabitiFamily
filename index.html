@@ -1190,14 +1190,76 @@ async function loginUser() {
         document.getElementById("portalFooter").style.display = "block";
 
         loadFamilyMembers();
-        loadAnnouncements();
-        loadCalendar();
-        checkAdminAccess();
+loadAnnouncements();
+loadCalendar();
+checkAdminAccess();
+showSignedInUser();
 
     } catch (error) {
 
         message.textContent = "Login error: " + error.message;
         console.error(error);
+
+    }
+}
+    async function showSignedInUser() {
+
+    try {
+
+        const { data: { user }, error: userError } =
+            await supabaseClient.auth.getUser();
+
+        if (userError || !user) {
+            return;
+        }
+
+        const { data: member, error: memberError } =
+            await supabaseClient
+                .from("family_members")
+                .select("display_name, preferred_name, first_name, middle_names, surname, role")
+                .eq("auth_user_id", user.id)
+                .maybeSingle();
+
+        let signedInName = user.email;
+
+        if (!memberError && member) {
+            signedInName =
+                member.display_name ||
+                member.preferred_name ||
+                [member.first_name, member.middle_names, member.surname]
+                    .filter(Boolean)
+                    .join(" ");
+        }
+
+        let signedInBox = document.getElementById("signedInUser");
+
+        if (!signedInBox) {
+            signedInBox = document.createElement("div");
+            signedInBox.id = "signedInUser";
+
+            signedInBox.style.padding = "10px";
+            signedInBox.style.margin = "10px 0";
+            signedInBox.style.borderRadius = "8px";
+            signedInBox.style.textAlign = "center";
+            signedInBox.style.fontWeight = "bold";
+
+            const portalContent =
+                document.getElementById("portalContent");
+
+            if (portalContent) {
+                portalContent.insertBefore(
+                    signedInBox,
+                    portalContent.firstChild
+                );
+            }
+        }
+
+        signedInBox.textContent =
+            "Signed in as: " + signedInName;
+
+    } catch (error) {
+
+        console.error("Could not display signed-in user:", error);
 
     }
 }
