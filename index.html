@@ -338,10 +338,48 @@ header p {
         Forgot Password?
     </a>
         </p>
-
+<p>
+    <a href="#" onclick="showSignupScreen(); return false;">
+        Create Family Account
+    </a>
+</p>
         <p id="loginMessage" class="small"></p>
     </div>
 </div>
+    <div id="signupScreen" class="login-screen" style="display: none;">
+    <div class="card login-card">
+        <h2>👨‍👩‍👧‍👦 Create Family Account</h2>
+        <p>Register for access to the Mutabazi Sabiti Family Portal.</p>
+
+        <input type="text"
+               id="signupName"
+               placeholder="Full name">
+
+        <input type="email"
+               id="signupEmail"
+               placeholder="Email address">
+
+        <input type="password"
+               id="signupPassword"
+               placeholder="Password">
+
+        <input type="password"
+               id="signupConfirmPassword"
+               placeholder="Confirm password">
+
+        <button class="primary" onclick="createFamilyAccount()">
+            Create Account
+        </button>
+
+        <p>
+            <a href="#" onclick="showLoginScreen(); return false;">
+                Already have an account? Sign In
+            </a>
+        </p>
+
+        <p id="signupMessage" class="small"></p>
+    </div>
+    </div>
     <div id="resetPasswordScreen" class="login-screen" style="display: none;">
     <div class="card login-card">
         <h2>🔐 Set New Password</h2>
