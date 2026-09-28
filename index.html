@@ -1412,6 +1412,52 @@ function showLoginScreen() {
         console.error(error);
     }
 } 
+    async function loadUnlinkedFamilyAccounts() {
+
+    const container =
+        document.getElementById("unlinkedFamilyAccounts");
+
+    if (!container) {
+        return;
+    }
+
+    container.innerHTML =
+        "<p class='small'>Loading family accounts...</p>";
+
+    try {
+
+        const { data: users, error } =
+            await supabaseClient.auth.admin.listUsers();
+
+        if (error) {
+            container.innerHTML =
+                "<p>Unable to load family accounts.</p>";
+            console.error(error);
+            return;
+        }
+
+        if (!users || users.users.length === 0) {
+            container.innerHTML =
+                "<p>No registered accounts found.</p>";
+            return;
+        }
+
+        container.innerHTML =
+            "<p>Registered accounts found: " +
+            users.users.length +
+            "</p>";
+
+    } catch (error) {
+
+        console.error(
+            "Error loading family accounts:",
+            error
+        );
+
+        container.innerHTML =
+            "<p>Unable to load family accounts.</p>";
+    }
+}
     async function forgotPassword() {
 
     const email = document.getElementById("loginEmail").value.trim();
