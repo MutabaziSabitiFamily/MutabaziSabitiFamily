@@ -1354,8 +1354,9 @@ showSignedInUser();
         const { data: requests, error } =
             await supabaseClient
                 .from("family_account_requests")
-                .select("id, auth_user_id, full_name, email, status, created_at")
-                .order("created_at", { ascending: false });
+.select("id, auth_user_id, full_name, email, status, created_at")
+.eq("status", "pending")
+.order("created_at", { ascending: false });
 
         if (error) {
 
