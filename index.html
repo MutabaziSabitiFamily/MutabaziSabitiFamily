@@ -1381,7 +1381,7 @@ showSignedInUser();
 
         container.innerHTML = "";
 
-requests.forEach(async function(request) {
+requests.forEach(function(request) {
 
     const card = document.createElement("div");
 
@@ -1401,29 +1401,11 @@ requests.forEach(async function(request) {
             📌 <strong>Status:</strong>
             ${request.status || "pending"}
         </p>
-
-        <label>
-            Select existing family member
-        </label>
-
-        <select
-            id="memberSelect_${request.id}"
-            style="width:100%; padding:12px; margin:10px 0; border:1px solid #ccc; border-radius:10px;"
-        >
-            <option value="">
-                Loading family members...
-            </option>
-        </select>
-
-        <button
-            class="primary"
-            disabled
-        >
-            🔗 Link Account
-        </button>
     `;
 
     container.appendChild(card);
+
+});
 
     const select =
         document.getElementById(
