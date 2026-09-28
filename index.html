@@ -1337,6 +1337,86 @@ showSignedInUser();
 
     }
 }
+    async function loadUnlinkedFamilyAccounts() {
+
+    const container =
+        document.getElementById("unlinkedFamilyAccounts");
+
+    if (!container) {
+        return;
+    }
+
+    container.innerHTML =
+        "<p class='small'>Loading family account requests...</p>";
+
+    try {
+
+        const { data: requests, error } =
+            await supabaseClient
+                .from("family_account_requests")
+                .select("id, auth_user_id, full_name, email, status, created_at")
+                .order("created_at", { ascending: false });
+
+        if (error) {
+
+            console.error(
+                "Error loading family account requests:",
+                error
+            );
+
+            container.innerHTML =
+                "<p>Unable to load family account requests.</p>";
+
+            return;
+        }
+
+        if (!requests || requests.length === 0) {
+
+            container.innerHTML =
+                "<p>No family account requests found.</p>";
+
+            return;
+        }
+
+        container.innerHTML = "";
+
+        requests.forEach(function(request) {
+
+            const card = document.createElement("div");
+
+            card.className = "card";
+
+            card.style.marginBottom = "15px";
+
+            card.innerHTML = `
+                <h3>👤 ${request.full_name || "Name not provided"}</h3>
+
+                <p>
+                    📧 <strong>Email:</strong>
+                    ${request.email || "Not provided"}
+                </p>
+
+                <p>
+                    📌 <strong>Status:</strong>
+                    ${request.status || "pending"}
+                </p>
+            `;
+
+            container.appendChild(card);
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Unexpected error loading account requests:",
+            error
+        );
+
+        container.innerHTML =
+            "<p>Unable to load family account requests.</p>";
+    }
+}
     function showSignupScreen() {
     document.getElementById("loginScreen").style.display = "none";
     document.getElementById("resetPasswordScreen").style.display = "none";
