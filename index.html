@@ -1253,7 +1253,8 @@ async function loginUser() {
         }
 
         if (!data || !data.session) {
-            message.textContent = "Login failed: No session was created.";
+            message.textContent =
+                "Login failed: No session was created.";
             return;
         }
 
@@ -1264,16 +1265,17 @@ async function loginUser() {
         document.getElementById("portalFooter").style.display = "block";
 
         loadFamilyMembers();
-loadAnnouncements();
-loadCalendar();
-checkAdminAccess();
-showSignedInUser();
+        loadAnnouncements();
+        loadCalendar();
+        checkAdminAccess();
+        showSignedInUser();
 
     } catch (error) {
 
-        message.textContent = "Login error: " + error.message;
-        console.error(error);
+        message.textContent =
+            "Login error: " + error.message;
 
+        console.error(error);
     }
 }
     async function showSignedInUser() {
