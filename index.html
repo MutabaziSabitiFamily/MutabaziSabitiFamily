@@ -1395,6 +1395,24 @@ function showLoginScreen() {
                 "Account could not be created.";
             return;
         }
+        const { error: requestError } =
+    await supabaseClient
+        .from("family_account_requests")
+        .insert([
+            {
+                auth_user_id: data.user.id,
+                full_name: name,
+                email: email,
+                status: "pending"
+            }
+        ]);
+
+if (requestError) {
+    console.error(
+        "Could not create family account request:",
+        requestError
+    );
+}
 
         message.textContent =
             "Account created successfully. Please check your email to confirm your account.";
