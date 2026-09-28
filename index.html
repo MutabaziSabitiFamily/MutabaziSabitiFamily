@@ -1382,30 +1382,101 @@ showSignedInUser();
         container.innerHTML = "";
 
         requests.forEach(function(request) {
+requests.forEach(async function(request) {
 
-            const card = document.createElement("div");
+    const card = document.createElement("div");
 
-            card.className = "card";
+    card.className = "card";
 
-            card.style.marginBottom = "15px";
+    card.style.marginBottom = "15px";
 
-            card.innerHTML = `
-                <h3>👤 ${request.full_name || "Name not provided"}</h3>
+    card.innerHTML = `
+        <h3>👤 ${request.full_name || "Name not provided"}</h3>
 
-                <p>
-                    📧 <strong>Email:</strong>
-                    ${request.email || "Not provided"}
-                </p>
+        <p>
+            📧 <strong>Email:</strong>
+            ${request.email || "Not provided"}
+        </p>
 
-                <p>
-                    📌 <strong>Status:</strong>
-                    ${request.status || "pending"}
-                </p>
-            `;
+        <p>
+            📌 <strong>Status:</strong>
+            ${request.status || "pending"}
+        </p>
 
-            container.appendChild(card);
+        <label>
+            Select existing family member
+        </label>
 
-        });
+        <select
+            id="memberSelect_${request.id}"
+            style="width:100%; padding:12px; margin:10px 0; border:1px solid #ccc; border-radius:10px;"
+        >
+            <option value="">
+                Loading family members...
+            </option>
+        </select>
+
+        <button
+            class="primary"
+            disabled
+        >
+            🔗 Link Account
+        </button>
+    `;
+
+    container.appendChild(card);
+
+    const select =
+        document.getElementById(
+            "memberSelect_" + request.id
+        );
+
+    const { data: members, error: memberError } =
+        await supabaseClient
+            .from("family_members")
+            .select("id, display_name, preferred_name, first_name, middle_names, surname, auth_user_id")
+            .is("auth_user_id", null)
+            .order("display_name", { ascending: true });
+
+    if (memberError) {
+
+        console.error(
+            "Error loading family members:",
+            memberError
+        );
+
+        select.innerHTML =
+            "<option value=''>Unable to load family members</option>";
+
+        return;
+    }
+
+    select.innerHTML =
+        "<option value=''>Select family member</option>";
+
+    members.forEach(function(member) {
+
+        const option =
+            document.createElement("option");
+
+        option.value = member.id;
+
+        option.textContent =
+            member.display_name ||
+            member.preferred_name ||
+            [
+                member.first_name,
+                member.middle_names,
+                member.surname
+            ]
+            .filter(Boolean)
+            .join(" ");
+
+        select.appendChild(option);
+
+    });
+
+});
 
     } catch (error) {
 
