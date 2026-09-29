@@ -1135,7 +1135,7 @@ function showPage(pageId) {
 
     const currentSection = document.querySelector("section.active");
 
-    if (currentSection && currentSection.id !== pageId) {
+    if (currentSection & currentSection.id !== pageId) {
         previousPage = currentSection.id;
     }
 
@@ -1183,9 +1183,7 @@ function goBack() {
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-alert(typeof window.supabase);
-</script>
+
 <script>
 const SUPABASE_URL = "https://dkjibindcgqhnvftgrhg.supabase.co";
 
