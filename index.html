@@ -330,7 +330,7 @@ header p {
         <input type="password" id="loginPassword"
                placeholder="Password">
 
-        <button class="primary" onclick="loginUser()">
+        <button class="primary" onclick="typeof loginUser === 'function' ? loginUser() : alert('loginUser function is not available')">
     Sign In
 </button>
         <p>
