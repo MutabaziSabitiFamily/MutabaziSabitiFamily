@@ -330,7 +330,7 @@ header p {
         <input type="password" id="loginPassword"
                placeholder="Password">
 
-        <button class="primary" onclick="alert(typeof supabaseClient)">
+        <button class="primary" onclick="loginUser()">
     Sign In
 </button>
         <p>
@@ -1228,8 +1228,8 @@ window.addEventListener("load", function () {
     checkUserSession();
 });
 
-async function loginUser() {
-alert("Login function is running");
+window.loginUser = async function() {
+
     const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value;
     const message = document.getElementById("loginMessage");
