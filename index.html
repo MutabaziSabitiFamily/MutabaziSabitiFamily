@@ -1394,19 +1394,67 @@ window.loginUser = async function() {
 
     if (memberError) {
 
-        console.error(
-            "Error loading family members:",
-            memberError
+    console.error(
+        "Error loading family members:",
+        memberError
+    );
+
+    container.innerHTML =
+        "<p>Unable to load family members.</p>";
+
+    return;
+}
+
+requests.forEach(function(request) {
+
+    const card =
+        document.createElement("div");
+
+    card.className = "card";
+
+    card.style.marginBottom = "15px";
+
+    card.innerHTML = `
+        <h3>👤 ${request.full_name || "Name not provided"}</h3>
+
+        <p>
+            📧 <strong>Email:</strong>
+            ${request.email || "Not provided"}
+        </p>
+
+        <p>
+            📌 <strong>Status:</strong>
+            ${request.status || "pending"}
+        </p>
+
+        <label>
+            Link to family member:
+        </label>
+
+        <select
+            id="memberSelect_${request.id}"
+            style="width:100%; margin:10px 0;"
+        >
+            <option value="">
+                Select family member
+            </option>
+        </select>
+
+        <button
+            class="primary"
+            type="button"
+            onclick="linkFamilyAccount('${request.id}', '${request.auth_user_id}')"
+        >
+            Link Account
+        </button>
+    `;
+
+    container.appendChild(card);
+
+    const select =
+        document.getElementById(
+            "memberSelect_" + request.id
         );
-
-        select.innerHTML =
-            "<option value=''>Unable to load family members</option>";
-
-        return;
-    }
-
-    select.innerHTML =
-        "<option value=''>Select family member</option>";
 
     members.forEach(function(member) {
 
@@ -1430,6 +1478,7 @@ window.loginUser = async function() {
 
     });
 
+});
 
     } catch (error) {
 
