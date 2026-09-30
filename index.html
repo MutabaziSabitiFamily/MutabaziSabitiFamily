@@ -1183,11 +1183,7 @@ function goBack() {
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-window.addEventListener("error", function(event) {
-    alert("JavaScript error: " + event.message);
-});
-</script>
+
 <script>
 const SUPABASE_URL = "https://dkjibindcgqhnvftgrhg.supabase.co";
 
@@ -1231,7 +1227,7 @@ window.addEventListener("load", function () {
 });
 
 window.loginUser = async function() {
-alert("loginUser started");
+
     const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value;
     const message = document.getElementById("loginMessage");
