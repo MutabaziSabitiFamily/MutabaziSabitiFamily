@@ -1353,18 +1353,18 @@ window.loginUser = async function() {
 
     try {
 
-        const { data: requests, error } =
+        const { data: requests, error: requestError } =
             await supabaseClient
                 .from("family_account_requests")
-.select("id, auth_user_id, full_name, email, status, created_at")
-.eq("status", "pending")
-.order("created_at", { ascending: false });
+                .select("id, auth_user_id, full_name, email, status, created_at")
+                .eq("status", "pending")
+                .order("created_at", { ascending: false });
 
-        if (error) {
+        if (requestError) {
 
             console.error(
                 "Error loading family account requests:",
-                error
+                requestError
             );
 
             container.innerHTML =
@@ -1381,45 +1381,16 @@ window.loginUser = async function() {
             return;
         }
 
+        const { data: members, error: memberError } =
+            await supabaseClient
+                .from("family_members")
+                .select(
+                    "id, display_name, preferred_name, first_name, middle_names, surname, auth_user_id"
+                )
+                .is("auth_user_id", null)
+                .order("display_name", { ascending: true });
+
         container.innerHTML = "";
-
-requests.forEach(function(request) {
-
-    const card = document.createElement("div");
-
-    card.className = "card";
-
-    card.style.marginBottom = "15px";
-
-    card.innerHTML = `
-        <h3>👤 ${request.full_name || "Name not provided"}</h3>
-
-        <p>
-            📧 <strong>Email:</strong>
-            ${request.email || "Not provided"}
-        </p>
-
-        <p>
-            📌 <strong>Status:</strong>
-            ${request.status || "pending"}
-        </p>
-    `;
-
-    container.appendChild(card);
-
-});
-
-    const select =
-        document.getElementById(
-            "memberSelect_" + request.id
-        );
-
-    const { data: members, error: memberError } =
-        await supabaseClient
-            .from("family_members")
-            .select("id, display_name, preferred_name, first_name, middle_names, surname, auth_user_id")
-            .is("auth_user_id", null)
-            .order("display_name", { ascending: true });
 
     if (memberError) {
 
