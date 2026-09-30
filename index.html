@@ -1491,6 +1491,93 @@ requests.forEach(function(request) {
             "<p>Unable to load family account requests.</p>";
     }
 }
+    
+async function linkFamilyAccount(requestId, authUserId) {
+
+    const select =
+        document.getElementById(
+            "memberSelect_" + requestId
+        );
+
+    if (!select || !select.value) {
+
+        alert(
+            "Please select the correct family member first."
+        );
+
+        return;
+    }
+
+    const memberId = select.value;
+
+    try {
+
+        const { error: memberError } =
+            await supabaseClient
+                .from("family_members")
+                .update({
+                    auth_user_id: authUserId
+                })
+                .eq("id", memberId)
+                .is("auth_user_id", null);
+
+        if (memberError) {
+
+            console.error(
+                "Error linking family account:",
+                memberError
+            );
+
+            alert(
+                "Unable to link the account: " +
+                memberError.message
+            );
+
+            return;
+        }
+
+        const { error: requestError } =
+            await supabaseClient
+                .from("family_account_requests")
+                .update({
+                    status: "approved"
+                })
+                .eq("id", requestId)
+                .eq("auth_user_id", authUserId)
+                .eq("status", "pending");
+
+        if (requestError) {
+
+            console.error(
+                "Error approving account request:",
+                requestError
+            );
+
+            alert(
+                "The family member was linked, but the request could not be approved."
+            );
+
+            return;
+        }
+
+        alert(
+            "Family account linked successfully."
+        );
+
+        loadUnlinkedFamilyAccounts();
+
+    } catch (error) {
+
+        console.error(
+            "Unexpected error linking family account:",
+            error
+        );
+
+        alert(
+            "Unable to link the family account."
+        );
+    }
+    }    
     function showSignupScreen() {
     document.getElementById("loginScreen").style.display = "none";
     document.getElementById("resetPasswordScreen").style.display = "none";
