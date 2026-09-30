@@ -1183,7 +1183,11 @@ function goBack() {
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+<script>
+window.addEventListener("error", function(event) {
+    alert("JavaScript error: " + event.message);
+});
+</script>
 <script>
 const SUPABASE_URL = "https://dkjibindcgqhnvftgrhg.supabase.co";
 
