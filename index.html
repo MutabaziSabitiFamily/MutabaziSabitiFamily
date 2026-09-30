@@ -1135,7 +1135,7 @@ function showPage(pageId) {
 
     const currentSection = document.querySelector("section.active");
 
-    if (currentSection & currentSection.id !== pageId) {
+    if (currentSection && currentSection.id !== pageId) {
         previousPage = currentSection.id;
     }
 
