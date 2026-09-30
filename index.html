@@ -1510,7 +1510,15 @@ async function linkFamilyAccount(requestId, authUserId) {
 
     const memberId = select.value;
 
-    try {
+const button =
+    select.parentElement.querySelector("button");
+
+if (button) {
+    button.disabled = true;
+    button.textContent = "Linking...";
+}
+
+try {
 
         const { error: memberError } =
             await supabaseClient
@@ -1523,18 +1531,23 @@ async function linkFamilyAccount(requestId, authUserId) {
 
         if (memberError) {
 
-            console.error(
-                "Error linking family account:",
-                memberError
-            );
+    console.error(
+        "Error linking family account:",
+        memberError
+    );
 
-            alert(
-                "Unable to link the account: " +
-                memberError.message
-            );
+    if (button) {
+        button.disabled = false;
+        button.textContent = "Link Account";
+    }
 
-            return;
-        }
+    alert(
+        "Unable to link the account: " +
+        memberError.message
+    );
+
+    return;
+}
 
         const { error: requestError } =
             await supabaseClient
